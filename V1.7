@@ -1,0 +1,929 @@
+local TweenService = game:GetService("TweenService")
+local Lighting = game:GetService("Lighting")
+local replicatedStorage = game:GetService("ReplicatedStorage")
+local UIS = game:GetService("UserInputService")
+local player = game.Players.LocalPlayer
+local character = player.Character
+local humanoid = character:FindFirstChildOfClass("Humanoid")
+local HMNRT = character:FindFirstChild("HumanoidRootPart")
+local Camera = workspace.CurrentCamera
+
+local AutoBuySeedCommon = false; local AutoBuySeedUncommon = false
+local AutoBuySeedRare = false; local AutoBuySeedMythical = false
+local AutoBuySeedDivine = false; local AutoBuySeedLegendary = false
+
+local TakePlantToOwn = false; local TakePlantToOIR = false --TakePlantToOwnIsRunning
+local OldPetFeed = nil; local AutoGetMoonFruit = false; local AutoEventMoonFruit = false
+local PlayerFarm = nil; local AutoFeedPetIsOn = false; local PetArea = nil; local AutoFeedPet = false
+local AutoFarm = false; local AutoSellOn = false; local AutoSell = false
+local WalkSpeedValue = 45; local EnabledWalkSpeed = false; local CanTakeFruitToBee = false
+
+local dragStart = Vector2.new(0, 0); local startPos = UDim2.new(0, 0, 0, 0); local ColorTheme = Color3.new(0.101961, 0.101961, 0.101961)
+local ScreenGui = Instance.new("ScreenGui");  local plrGui = player.PlayerGui
+ScreenGui.Parent = plrGui; ScreenGui.Name = "Freecam"
+local DailyQuests_UI = plrGui:FindFirstChild("DailyQuests_UI")
+local Gear_Shop = plrGui:FindFirstChild("Gear_Shop")
+local Seed_Shop = plrGui:FindFirstChild("Seed_Shop")
+local function createSlider(parent, position, size, minValue, maxValue, defaultValue, labelText)
+	local mainLine = Instance.new("Frame");	local line = Instance.new("Frame")
+	local lineButton = Instance.new("Frame");	local textLabel = Instance.new("TextLabel")
+	local uiCornerMain = Instance.new("UICorner");	local uiCornerLine = Instance.new("UICorner")
+	local uiCornerButton = Instance.new("UICorner")
+	mainLine.Parent = parent;	mainLine.Position = position
+	mainLine.Size = size;	mainLine.BackgroundColor3 = Color3.new(0.176471, 0.121569, 0.294118)
+	mainLine.BorderSizePixel = 0;	uiCornerMain.Parent = mainLine
+	line.Parent = mainLine;	line.Position = UDim2.new(0, 0, 0, 0)
+	line.Size = UDim2.new(1, 0, 1, 0);	line.BackgroundColor3 = Color3.new(0.517647, 0.329412, 1)
+	line.BorderSizePixel = 0;	uiCornerLine.Parent = line
+	lineButton.Parent = mainLine;	lineButton.Position = UDim2.new(0.9, 0, -0.1, 0)
+	lineButton.Size = UDim2.new(0.1, 0, 1.2, 0);	lineButton.BackgroundColor3 = Color3.new(0.45098, 0, 1)
+	lineButton.BorderSizePixel = 0;	uiCornerButton.Parent = lineButton
+	textLabel.Parent = mainLine;	textLabel.Position = UDim2.new(0, 0, -1.5, 0)
+	textLabel.Size = UDim2.new(1, 0, 1, 0);	textLabel.Text = "<b> " .. labelText .. " </b>"
+	textLabel.TextScaled = true;	textLabel.RichText = true; textLabel.TextXAlignment = Enum.TextXAlignment.Left
+	textLabel.BackgroundTransparency = 1;	textLabel.TextColor3 = Color3.new(0.407843, 0.352941, 1)	
+	local value = defaultValue
+	local function updateSlider(inputX)
+		local sliderSize = mainLine.AbsoluteSize.X;		local sliderPos = mainLine.AbsolutePosition.X
+		local relativeX = math.clamp(inputX - sliderPos, 0, sliderSize);		local percent = relativeX / sliderSize
+		value = minValue + (maxValue - minValue) * percent;		line.Size = UDim2.new(percent, 0, 1, 0)
+		lineButton.Position = UDim2.new(percent, -lineButton.AbsoluteSize.X / 2, 0.5, -lineButton.AbsoluteSize.Y / 2)
+		textLabel.Text = "<b> " .. labelText .. " " .. math.floor(value) .. " </b>"
+
+		if labelText == "ความเร็วการเดิน" then
+			WalkSpeedValue = value
+		end		
+	end
+
+	local function onInputBegan(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			local moveConnection, releaseConnection
+			moveConnection = UIS.InputChanged:Connect(function(input)
+				if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+					updateSlider(input.Position.X)
+					if input.UserInputType == Enum.UserInputType.Touch then
+						Camera.CameraType = Enum.CameraType.Scriptable
+					end
+				end
+			end)
+			releaseConnection = UIS.InputEnded:Connect(function(input)
+				if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+					if moveConnection then moveConnection:Disconnect() end
+					if releaseConnection then releaseConnection:Disconnect() end
+					Camera.CameraType = Enum.CameraType.Custom
+				end
+			end)
+		end
+	end
+	lineButton.InputBegan:Connect(onInputBegan)
+	return mainLine
+end
+local function SetButtonImage(ButtonPart, Position, Size, Zindex, Parent, ImColor , Image)
+	ButtonPart.Image = Image
+	ButtonPart.Parent = Parent
+	ButtonPart.Position = Position
+	ButtonPart.Size = Size
+	ButtonPart.BackgroundTransparency = 1
+	ButtonPart.ZIndex = Zindex
+	ButtonPart.ImageColor3 = ImColor
+end
+local function SetButtonText(ButtonPart, Position, Size, Zindex, Parent, BkColor , Text, In1)
+	local UICornerButtonPart = Instance.new("UICorner")
+	ButtonPart.Text = Text;	ButtonPart.Parent = Parent
+	ButtonPart.Position = Position; ButtonPart.Size = Size
+	ButtonPart.TextScaled = true;	ButtonPart.RichText = true
+	ButtonPart.TextColor3 = Color3.new(1, 1, 1)
+	if BkColor == 1 then
+		ButtonPart.BackgroundTransparency = 1	ButtonPart.TextColor3 = Color3.new(0.509804, 0.388235, 1)
+	else
+		ButtonPart.BackgroundColor3 = BkColor
+	end
+	ButtonPart.ZIndex = Zindex	UICornerButtonPart.Parent = ButtonPart
+	if In1 == "Main" then
+		local Frame = Instance.new("Frame")
+		local UICorner = Instance.new("UICorner")
+		Frame.Size = UDim2.new(0.06, 0,1, 0) UICornerButtonPart.CornerRadius = UDim.new(0,5)
+		Frame.Parent = ButtonPart UICorner.Parent = Frame
+		Frame.BackgroundColor3 = Color3.new(0.0627451, 0.0627451, 0.0627451)
+		return Frame
+	end
+end
+local function NewFrame(FrameType, Position, Size, Zindex, Parent, BGC, In1, TorF, In2)-----Huc = Have Ui Conner  ,  BGC = BackgroundColor3  , TorF = Ture Or False
+	if TorF == nil then TorF = true end
+	local ReturItem = nil
+	if FrameType == "Frame" then
+		local Item = Instance.new(FrameType);		local UICornerFrame1 = Instance.new("UICorner")
+		Item.Parent = Parent;		Item.Position = Position
+		Item.Size = Size;		Item.BackgroundColor3 = BGC
+		Item.ZIndex = Zindex;		Item.Visible = TorF
+		UICornerFrame1.Parent = Item;		ReturItem = Item
+	elseif FrameType == "TextLabel" then----In1 = text
+		local Item = Instance.new("TextLabel")
+		Item.Parent = Parent;		Item.Position = Position
+		Item.Size = Size;		Item.BackgroundTransparency = 1
+		Item.Font = Enum.Font.Highway;		Item.TextScaled = true
+		Item.ZIndex = Zindex;		Item.RichText = true
+		if In2 == "Left" then Item.TextXAlignment = Enum.TextXAlignment.Left end
+		Item.Text = In1;		Item.TextColor3 = BGC;		ReturItem = Item
+	elseif FrameType == "ImageLabel" then----In1 = ImageId
+		local Item = Instance.new(FrameType);		Item.Image = In1
+		Item.Parent = Parent;		Item.Position = Position
+		Item.Size = Size;		Item.BackgroundTransparency = 1
+		Item.ZIndex = Zindex;		Item.ImageColor3 = BGC
+		ReturItem = Item;
+	end
+	return ReturItem
+end
+local Frame1 = NewFrame("Frame", UDim2.new(0.3, 0,0, 0), UDim2.new(0.4, 0,0.07, 0), 3, ScreenGui, Color3.new(0.0784314, 0.0784314, 0.0784314))
+local UIAspectRatioConstraintFrame1 = Instance.new("UIAspectRatioConstraint", Frame1); UIAspectRatioConstraintFrame1.AspectRatio = 10
+local ShowMainFrame = true; local dragging2 = false; local dragStart2 = nil ; local FirstPo = nil
+local StratIcon = Instance.new("ImageButton"); local UIAspectRatioConstraintStratIcon = Instance.new("UIAspectRatioConstraint", StratIcon); UIAspectRatioConstraintStratIcon.AspectRatio = 1
+SetButtonImage(StratIcon, UDim2.new(0.2,0,0.2,0), UDim2.new(0.05,0,0.1,0), 1, ScreenGui, Color3.new(1, 1, 1) , "http://www.roblox.com/asset/?id=81129676934693")
+StratIcon.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging2 = true;	dragStart2 = input.Position; startPos = StratIcon.Position
+		if FirstPo == nil then
+			FirstPo = StratIcon.Position
+		end
+	end
+end)
+UIS.InputChanged:Connect(function(input)
+	if dragging2 and (input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement) then
+		local delta = input.Position - dragStart2
+		StratIcon.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+		if input.UserInputType == Enum.UserInputType.Touch then	
+			Camera.CameraType = Enum.CameraType.Scriptable
+		end
+	end
+end)
+UIS.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging2 = false 
+		Camera.CameraType = Enum.CameraType.Custom 
+	end
+end)
+StratIcon.Activated:Connect(function()
+	if StratIcon.Position == FirstPo then
+		if Frame1.Visible == true then
+			Frame1.Visible = false
+		else
+			Frame1.Visible = true
+		end
+	else
+		FirstPo = nil
+	end
+end)
+local TextLable1 = Instance.new("TextLabel") TextLable1.TextXAlignment = Enum.TextXAlignment.Left
+SetButtonText(TextLable1, UDim2.new(0.11, 0,0.07, 0), UDim2.new(0.7, 0,0.9, 0), 4, Frame1, 1 , "<b>Somtank V1.7</b>", "Left")
+TextLable1.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		dragStart = input.Position
+		startPos = Frame1.Position
+	end
+end)
+UIS.InputChanged:Connect(function(input)
+	if dragging and (input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement) then
+		local delta = input.Position - dragStart
+		Frame1.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+		if input.UserInputType == Enum.UserInputType.Touch then
+			Camera.CameraType = Enum.CameraType.Scriptable
+		end
+	end
+end)
+UIS.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = false
+		Camera.CameraType = Enum.CameraType.Custom
+	end
+end)
+local LoadFrame2 = NewFrame("Frame" ,UDim2.new(0, 0,0, 0) ,UDim2.new(1, 0,8.5, 0) , 10 ,Frame1, Color3.new(0.141176, 0.141176, 0.141176))
+local LoadTextLabel1 = NewFrame("TextLabel",UDim2.new(0.05, 0,.7, 0),UDim2.new(.9, 0,.2, 0), 12, LoadFrame2, Color3.new(0.580392, 0.388235, 1),"Grow a Garden Script ")
+local ImageLabel1 = NewFrame("ImageLabel" ,UDim2.new(.25, 0,.1, 0) ,UDim2.new(.5, 0,.6, 0), 11, LoadFrame2, Color3.new(0.45098, 0, 1),"http://www.roblox.com/asset/?id=80019916158199")
+local tweenInfo2 = TweenInfo.new(0.2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+local IconHack1 = NewFrame("ImageLabel" ,UDim2.new(0, 0,0.05, 0) ,UDim2.new(0.1, 0,0.9, 0), 3, Frame1, Color3.new(0.45098, 0, 1),"http://www.roblox.com/asset/?id=80019916158199")
+local Frame2 = NewFrame("Frame" ,UDim2.new(0, 0,0.5, 0) ,UDim2.new(1, 0,8, 0), 0, Frame1, ColorTheme)
+local Frame3 = NewFrame("Frame" ,UDim2.new(0, 0,0, 0) ,UDim2.new(0.4, 0,1, 0), 0, Frame2, ColorTheme)
+local FrameControTarget = NewFrame("Frame" ,UDim2.new(1, 0,0, 0) ,UDim2.new(0.6, 0,1, 0), 2, Frame2, Color3.new(0.0823529, 0.0823529, 0.0823529), "", false)
+local FrameContro1 = NewFrame("Frame" ,UDim2.new(.4, 0,0, 0) ,UDim2.new(0.6, 0,1, 0), 0, Frame2, ColorTheme, "", false); FrameContro1.Name = "FrameContro1"
+local FrameContro2 = NewFrame("Frame" ,UDim2.new(.4, 0,0, 0) ,UDim2.new(0.6, 0,1, 0), 0, Frame2, ColorTheme, "", false); FrameContro2.Name = "FrameContro2"
+local FrameContro4 = NewFrame("Frame" ,UDim2.new(.4, 0,0, 0) ,UDim2.new(0.6, 0,1, 0), 0, Frame2, ColorTheme, "", false); FrameContro4.Name = "FrameContro4"
+local FrameContro5 = NewFrame("Frame" ,UDim2.new(.4, 0,0, 0) ,UDim2.new(0.6, 0,1, 0), 0, Frame2, ColorTheme, "", false); FrameContro5.Name = "FrameContro5"
+local FrameContro6 = NewFrame("Frame" ,UDim2.new(.4, 0,0, 0) ,UDim2.new(0.6, 0,1, 0), 0, Frame2, ColorTheme, "", false); FrameContro6.Name = "FrameContro6"
+local ButtonCon1 = Instance.new("TextButton")
+SetButtonText(ButtonCon1, UDim2.new(0.06, 0,0.1, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro1, Color3.new(0.294118, 0.294118, 0.294118) , "<b> เปิดเดินไว 🔴 </b>")
+ButtonCon1.Activated:Connect(function()
+	if EnabledWalkSpeed == false then
+		ButtonCon1.Text = "<b> ปิดเดินไว 🟢 </b>"
+		EnabledWalkSpeed = true
+	else
+		ButtonCon1.Text = "<b> เปิดเดินไว 🔴 </b>"
+		EnabledWalkSpeed = false
+		HMNRT.AssemblyLinearVelocity = Vector3.new(0, HMNRT.AssemblyLinearVelocity.Y, 0)
+	end
+end)
+local ButtonCon2 = Instance.new("TextButton")
+SetButtonText(ButtonCon2, UDim2.new(0.06, 0,0.39, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro1, Color3.new(0.294118, 0.294118, 0.294118) , "<b> เก็บผลไม้ทั้งหมด 🍍 </b>")
+ButtonCon2.Activated:Connect(function()
+	if AutoFarm == true then
+		ButtonCon2.Text = "<b> เก็บผลไม้ทั้งหมด 🍍 </b>"
+		AutoFarm = false
+	else
+		ButtonCon2.Text = "<b> กำลังเก็บนะครับ 🟢 </b>"
+		AutoFarm = true
+	end
+end)
+local ButtonCon3 = Instance.new("TextButton")
+SetButtonText(ButtonCon3, UDim2.new(0.06, 0,0.54, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro1, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ขายผลไม้ทั้งหมดในตัว 🍍 </b>")
+ButtonCon3.Activated:Connect(function()
+	ButtonCon3.Active = false
+	if AutoSell == true then
+		ButtonCon3.Text = "<b> ขายผลไม้ทั้งหมดในตัว 🍍 </b>"
+		AutoSell = false
+	else
+		ButtonCon3.Text = "<b> ขายผลไม้ทั้งหมดในตัว 🟢 </b>"
+		AutoSell = true
+	end
+	ButtonCon3.Active = true
+end)
+local ButtonCon4 = Instance.new("TextButton")
+SetButtonText(ButtonCon4, UDim2.new(0.06, 0,0.69, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro1, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ขายผลไม้ในมือ 🍍 </b>")
+ButtonCon4.Activated:Connect(function()
+	ButtonCon4.Active = false
+	local SellRemote = game:FindFirstChild("ReplicatedStorage"):FindFirstChild("GameEvents"):FindFirstChild("Sell_Item")	
+	local targetCFrame = CFrame.new(61.5776634, 2.99999976, 0.426792443, 0.00177166925, -3.37897221e-09, -0.99999845, -7.44731208e-13, 1, -3.37897887e-09, 0.99999845, 6.73116294e-12, 0.00177166925)
+	local originalCFrame = HMNRT.CFrame
+	local tweenInfo = TweenInfo.new(0.1, Enum.EasingStyle.Linear)
+	local tweenToTarget = TweenService:Create(HMNRT, tweenInfo, {CFrame = targetCFrame})
+	tweenToTarget:Play()
+	tweenToTarget.Completed:Connect(function()
+		wait(0.2)
+		SellRemote:FireServer()
+		wait(0.2)
+		local tweenBack = TweenService:Create(HMNRT, tweenInfo, {CFrame = originalCFrame})
+		tweenBack:Play()
+	end)
+	ButtonCon4.Active = true
+end)
+local ButtonCon5 = Instance.new("TextButton")
+SetButtonText(ButtonCon5, UDim2.new(0.06, 0,0.1, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro2, Color3.new(0.294118, 0.294118, 0.294118) , "<b> เควส 📜 </b>")
+ButtonCon5.Activated:Connect(function()
+	if DailyQuests_UI.Enabled == false then
+		DailyQuests_UI.Enabled = true
+		Seed_Shop.Enabled = false
+		Gear_Shop.Enabled = false
+	else
+		DailyQuests_UI.Enabled = false
+	end
+end)
+local ButtonCon6 = Instance.new("TextButton")
+SetButtonText(ButtonCon6, UDim2.new(0.06, 0,0.25, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro2, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ร้านขายอุปกรณ์ 🧰 </b>")
+ButtonCon6.Activated:Connect(function()
+	
+	if Gear_Shop.Enabled == false then
+		Gear_Shop.Enabled = true
+		Seed_Shop.Enabled = false
+		DailyQuests_UI.Enabled = false
+	else
+		Gear_Shop.Enabled = false
+	end
+end)
+local ButtonCon7 = Instance.new("TextButton")
+SetButtonText(ButtonCon7, UDim2.new(0.06, 0,0.4, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro2, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ร้านขายเมล็ด 🌱 </b>")
+ButtonCon7.Activated:Connect(function()
+	if Seed_Shop.Enabled == false then
+		Seed_Shop.Enabled = true
+		DailyQuests_UI.Enabled = false
+		Gear_Shop.Enabled = false
+	else
+		Seed_Shop.Enabled = false
+	end
+end)
+local ButtonCon8 = Instance.new("TextButton")
+SetButtonText(ButtonCon8, UDim2.new(0.06, 0,0.1, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro4, Color3.new(0.294118, 0.294118, 0.294118) , "<b> จุดขายเมล็ด 🌱 </b>")
+ButtonCon8.Activated:Connect(function()
+	local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Linear)
+	local NewCFrame = CFrame.new(61.5854721, 2.99999976, -27.0039806, 7.7495434e-15, 8.8112273e-09, -1, -6.58821869e-12, 1, 8.8112273e-09, 1, 6.58821869e-12, 7.74960184e-15)
+	local tweenToTarget = TweenService:Create(HMNRT, tweenInfo, {CFrame = NewCFrame})
+	tweenToTarget:Play()
+end)
+local ButtonCon9 = Instance.new("TextButton")
+SetButtonText(ButtonCon9, UDim2.new(0.06, 0,0.25, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro4, Color3.new(0.294118, 0.294118, 0.294118) , "<b> จุดขายผลไม้ 🍍 </b>")
+ButtonCon9.Activated:Connect(function()
+	local tweenInfo = TweenInfo.new(0.1, Enum.EasingStyle.Linear)
+	local NewCFrame = CFrame.new(61.5854721, 2.99999976, 0.426784515, -3.83952337e-13, 1.6424716e-09, -1, 5.88446003e-09, 1, 1.6424716e-09, 1, -5.88446003e-09, -3.83962014e-13)
+	local tweenToTarget = TweenService:Create(HMNRT, tweenInfo, {CFrame = NewCFrame})
+	tweenToTarget:Play()
+end)
+local ButtonCon11 = Instance.new("TextButton")
+SetButtonText(ButtonCon11, UDim2.new(0.06, 0,0.4, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro4, Color3.new(0.294118, 0.294118, 0.294118) , "<b> จุดขายใข่สัตว์เลี้ยง 🐶 </b>")
+ButtonCon11.Activated:Connect(function()
+	local tweenInfo = TweenInfo.new(0.1, Enum.EasingStyle.Linear)
+	local NewCFrame = CFrame.new(-252.128983, 2.99999976, -2.67034841, 0.0180913769, 2.80647043e-08, 0.999836326, -1.02434872e-09, 1, -2.80507635e-08, -0.999836326, -5.16704124e-10, 0.0180913769)
+	local tweenToTarget = TweenService:Create(HMNRT, tweenInfo, {CFrame = NewCFrame})
+	tweenToTarget:Play()
+end)
+local ButtonCon12 = Instance.new("TextButton")
+SetButtonText(ButtonCon12, UDim2.new(0.06, 0,0.55, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro4, Color3.new(0.294118, 0.294118, 0.294118) , "<b> จุดขายอุปกรณ์ 🧰 </b>")
+ButtonCon12.Activated:Connect(function()
+	local tweenInfo = TweenInfo.new(0.1, Enum.EasingStyle.Linear)
+	local NewCFrame = CFrame.new(-261.396271, 2.99999976, -31.3658257, -0.00704089738, -2.63061093e-08, 0.999975204, 4.10310399e-08, 1, 2.65956643e-08, -0.999975204, 4.12172803e-08, -0.00704089738)
+	local tweenToTarget = TweenService:Create(HMNRT, tweenInfo, {CFrame = NewCFrame})
+	tweenToTarget:Play()
+end)
+local ButtonCon13 = Instance.new("TextButton")
+SetButtonText(ButtonCon13, UDim2.new(0.06, 0,0.85, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro1, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ออโต้ให้อาหารสัตว์เลี้ยง 🐶 </b>")
+ButtonCon13.Activated:Connect(function()
+	ButtonCon13.Active = false
+	if AutoFeedPet == false then
+		AutoFeedPet = true
+		ButtonCon13.Text = "<b> ออโต้ให้อาหารสัตว์เลี้ยง 🟢 </b>"
+	else
+		AutoFeedPet = false
+		ButtonCon13.Text = "<b> ออโต้ให้อาหารสัตว์เลี้ยง 🐶 </b>"
+	end
+	ButtonCon13.Active = true
+end)
+local ButtonCon14 = Instance.new("TextButton")
+SetButtonText(ButtonCon14, UDim2.new(0.06, 0,0.7, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro4, Color3.new(0.294118, 0.294118, 0.294118) , "<b> จุดทำเควสผึ้ง 🍯 </b>")
+ButtonCon14.Activated:Connect(function()
+	local tweenInfo = TweenInfo.new(0.1, Enum.EasingStyle.Linear)
+	local NewCFrame = CFrame.new(-100.13208, 4.28000784, -7.80074024, 0.999975264, 3.43288917e-08, 0.00703697465, -3.38697426e-08, 1, -6.53675727e-08, -0.00703697465, 6.51276153e-08, 0.999975264)
+	local tweenToTarget = TweenService:Create(HMNRT, tweenInfo, {CFrame = NewCFrame})
+	tweenToTarget:Play()
+end)
+local ButtonCon15 = Instance.new("TextButton")
+SetButtonText(ButtonCon15, UDim2.new(0.06, 0,0.1, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro5, Color3.new(0.294118, 0.294118, 0.294118) , "<b> เก็บผลพิเศษ 🍇 </b>")
+ButtonCon15.Activated:Connect(function()
+	if AutoGetMoonFruit == false then
+		ButtonCon15.Text = "<b> เก็บผลพิเศษ 🟢 </b>"
+		AutoGetMoonFruit = true
+	else
+		ButtonCon15.Text = "<b> เก็บผลพิเศษ 🍇 </b>"
+		AutoGetMoonFruit = true
+	end
+end)
+local ButtonCon16 = Instance.new("TextButton")
+SetButtonText(ButtonCon16, UDim2.new(0.06, 0,0.1, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro5, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ออโต้ฟาร์มน้ำผึ้ง 🍯 </b>")
+ButtonCon16.Activated:Connect(function()
+	if AutoGetMoonFruit == false then
+		ButtonCon16.Text = "<b> ออโต้ฟาร์มน้ำผึ้ง 🟢 </b>"
+		AutoGetMoonFruit = true
+	else
+		ButtonCon16.Text = "<b> ออโต้ฟาร์มน้ำผึ้ง 🍯 </b>"
+		AutoGetMoonFruit = false
+	end
+end)
+-- ทั่วไป, ไม่ธรรมดา, หายาก, ตำนาน, ในตำนาน, ศักดิ์สิทธิ์
+local ButtonCon18 = Instance.new("TextButton")
+SetButtonText(ButtonCon18, UDim2.new(0.06, 0,0.1, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro6, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ออโต้ซื้อเมล็ดทั่วไป 🥕 </b>")
+ButtonCon18.Activated:Connect(function()
+	if AutoBuySeedCommon == false then
+		ButtonCon18.Text = "<b> ออโต้ซื้อเมล็ดทั่วไป 🟢 </b>"
+		AutoBuySeedCommon = true
+	else
+		ButtonCon18.Text = "<b> ออโต้ซื้อเมล็ดทั่วไป 🥕 </b>"
+		AutoBuySeedCommon = false
+	end
+end)
+local ButtonCon19 = Instance.new("TextButton")
+SetButtonText(ButtonCon19, UDim2.new(0.06, 0,0.25, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro6, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ออโต้ซื้อเมล็ดไม่ธรรมดา 🍊 </b>")
+ButtonCon19.Activated:Connect(function()
+	if AutoBuySeedUncommon == false then
+		ButtonCon19.Text = "<b> ออโต้ซื้อเมล็ดไม่ธรรมดา 🟢 </b>"
+		AutoBuySeedUncommon = true
+	else
+		ButtonCon19.Text = "<b> ออโต้ซื้อเมล็ดไม่ธรรมดา 🍊 </b>"
+		AutoBuySeedUncommon = false
+	end
+end)
+local ButtonCon20 = Instance.new("TextButton")
+SetButtonText(ButtonCon20, UDim2.new(0.06, 0,0.4, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro6, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ออโต้ซื้อเมล็ดหายาก 🌽 </b>")
+ButtonCon20.Activated:Connect(function()
+	if AutoBuySeedRare == false then
+		ButtonCon20.Text = "<b> ออโต้ซื้อเมล็ดหายาก 🟢 </b>"
+		AutoBuySeedRare = true
+	else
+		ButtonCon20.Text = "<b> ออโต้ซื้อเมล็ดหายาก 🌽 </b>"
+		AutoBuySeedRare = false
+	end
+end)
+local ButtonCon21 = Instance.new("TextButton")
+SetButtonText(ButtonCon21, UDim2.new(0.06, 0,0.55, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro6, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ออโต้ซื้อเมล็ดตำนาน 🍉 </b>")
+ButtonCon21.Activated:Connect(function()
+	if AutoBuySeedLegendary == false then
+		ButtonCon21.Text = "<b> ออโต้ซื้อเมล็ดตำนาน 🟢 </b>"
+		AutoBuySeedLegendary = true
+	else
+		ButtonCon21.Text = "<b> ออโต้ซื้อเมล็ดตำนาน 🍉 </b>"
+		AutoBuySeedLegendary = false
+	end
+end)
+local ButtonCon22 = Instance.new("TextButton")
+SetButtonText(ButtonCon22, UDim2.new(0.06, 0,0.7, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro6, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ออโต้ซื้อเมล็ดในตำนาน 🥭 </b>")
+ButtonCon22.Activated:Connect(function()
+	if AutoBuySeedMythical == false then
+		ButtonCon22.Text = "<b> ออโต้ซื้อเมล็ดในตำนาน 🟢 </b>"
+		AutoBuySeedMythical = true
+	else
+		ButtonCon22.Text = "<b> ออโต้ซื้อเมล็ดในตำนาน 🥭 </b>"
+		AutoBuySeedMythical = false
+	end
+end)
+local ButtonCon23 = Instance.new("TextButton")
+SetButtonText(ButtonCon23, UDim2.new(0.06, 0,0.85, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro6, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ออโต้ซื้อเมล็ดศักดิ์สิทธิ์ 🌶️ </b>")
+ButtonCon23.Activated:Connect(function()
+	if AutoBuySeedDivine == false then
+		ButtonCon23.Text = "<b> ออโต้ซื้อเมล็ดศักดิ์สิทธิ์ 🟢 </b>"
+		AutoBuySeedDivine = true
+	else
+		ButtonCon23.Text = "<b> ออโต้ซื้อเมล็ดศักดิ์สิทธิ์ 🌶️ </b>"
+		AutoBuySeedDivine = false
+	end
+end)
+local ButtonCon24 = Instance.new("TextButton") ; local AutoBuyBeeSeedPack = false
+SetButtonText(ButtonCon24, UDim2.new(0.06, 0,0.25, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro5, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ออโต้ซื้อถุงเมล็ดพืช 🌱 </b>")
+ButtonCon24.Activated:Connect(function()
+	if AutoBuyBeeSeedPack == false then
+		ButtonCon24.Text = "<b> ออโต้ซื้อถุงเมล็ดพืช 🟢 </b>"
+		AutoBuyBeeSeedPack = true
+	else
+		ButtonCon24.Text = "<b> ออโต้ซื้อถุงเมล็ดพืช 🌱 </b>"
+		AutoBuyBeeSeedPack = false
+	end
+end)
+local ButtonCon25 = Instance.new("TextButton") ; local AutoBuyBeeEgg = false
+SetButtonText(ButtonCon25, UDim2.new(0.06, 0,0.4, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro5, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ออโต้ซื้อไข่ผึ้ง 🥚 </b>")
+ButtonCon25.Activated:Connect(function()
+	if AutoBuyBeeEgg == false then
+		ButtonCon25.Text = "<b> ออโต้ซื้อไข่ผึ้ง 🟢 </b>"
+		AutoBuyBeeEgg = true
+	else
+		ButtonCon25.Text = "<b> ออโต้ซื้อไข่ผึ้ง 🥚 </b>"
+		AutoBuyBeeEgg = false
+	end
+end)
+local ButtonCon26 = Instance.new("TextButton") ; local AutoBuyBeeCrate = false
+SetButtonText(ButtonCon26, UDim2.new(0.06, 0,0.55, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro5, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ออโต้ซื้อกล่องผึ้ง 📦 </b>")
+ButtonCon26.Activated:Connect(function()
+	if AutoBuyBeeCrate == false then
+		ButtonCon26.Text = "<b> ออโต้ซื้อกล่องผึ้ง 🟢 </b>"
+		AutoBuyBeeCrate = true
+	else
+		ButtonCon26.Text = "<b> ออโต้ซื้อกล่องผึ้ง 📦 </b>"
+		AutoBuyBeeCrate = false
+	end
+end)
+
+local WalkSpeedslider = createSlider(FrameContro1, UDim2.new(0.06, 0, 0.3, 0), UDim2.new(0.85, 0, 0.05, 0), 0, 200, 16, "ความเร็วการเดิน")
+
+local ButtonMain1 = Instance.new("TextButton") ButtonMain1.BackgroundTransparency = .7 local ColorFrameMain1 = SetButtonText(ButtonMain1, UDim2.new(0.017, 0,0.1, 0), UDim2.new(0.37, 0,0.1, 0), 1, Frame2, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ผู้เล่น 👤 </b>", "Main")
+local ButtonMain2 = Instance.new("TextButton") ButtonMain2.BackgroundTransparency = .7 local ColorFrameMain2 = SetButtonText(ButtonMain2, UDim2.new(0.017, 0,0.25, 0), UDim2.new(0.37, 0,0.1, 0), 1, Frame2, Color3.new(0.294118, 0.294118, 0.294118) , "<b> หน้าต่าง UI 🌐 </b>", "Main")
+local ButtonMain4 = Instance.new("TextButton") ButtonMain4.BackgroundTransparency = .7 local ColorFrameMain4 = SetButtonText(ButtonMain4, UDim2.new(0.017, 0,0.4, 0), UDim2.new(0.37, 0,0.1, 0), 1, Frame2, Color3.new(0.294118, 0.294118, 0.294118) , "<b> วาร์ป 🌀 </b>", "Main")
+local ButtonMain5 = Instance.new("TextButton") ButtonMain5.BackgroundTransparency = .7 local ColorFrameMain5 = SetButtonText(ButtonMain5, UDim2.new(0.017, 0,0.7, 0), UDim2.new(0.37, 0,0.1, 0), 1, Frame2, Color3.new(0.294118, 0.294118, 0.294118) , "<b> อีเว้นท์ 🐝 </b>", "Main")
+local ButtonMain6 = Instance.new("TextButton") ButtonMain6.BackgroundTransparency = .7 local ColorFrameMain6 = SetButtonText(ButtonMain6, UDim2.new(0.017, 0,0.55, 0), UDim2.new(0.37, 0,0.1, 0), 1, Frame2, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ซื้อเมล็ดออโต้ 🌱 </b>", "Main")
+local LineFrame = NewFrame("Frame", UDim2.new(0.405, 0,0.08, 0), UDim2.new(0.01, 0,0.9, 0), 3, Frame2, Color3.new(1, 1, 1))
+local gradient = Instance.new("UIGradient", LineFrame); gradient.Rotation = 90; gradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(45, 45, 45)), 	ColorSequenceKeypoint.new(0.5, Color3.fromRGB(93, 0, 255)), ColorSequenceKeypoint.new(1, Color3.fromRGB(45, 45, 45))}
+Close = Instance.new("TextButton");Close.Parent = Frame1
+Close.Position = UDim2.new(0.91, 0,0.17, 0);Close.Size = UDim2.new(0.08, 0,0.65, 0)
+Close.BackgroundTransparency = 1;Close.Font = Enum.Font.Highway
+Close.Text = "X";Close.TextScaled = true
+Close.ZIndex = 3;Close.TextColor3 = Color3.new(1, 1, 1)
+Close.Activated:Connect(function()
+	Close.Interactable = false
+	local Bye = Instance.new("Sound");	Bye.Parent = game.SoundService;	Bye.SoundId = "rbxassetid://154157386";	Bye:Play()
+	task.wait(1);	Bye:Destroy();	ScreenGui:Destroy();	Frame1:Destroy()
+end)
+local CloseEye = Instance.new("TextButton")
+local UICornerCloseEye = Instance.new("UICorner")
+CloseEye.Parent = Frame1;CloseEye.Position = UDim2.new(0.8, 0,0.17, 0)
+CloseEye.Size = UDim2.new(0.08, 0,0.65, 0);CloseEye.BackgroundTransparency = 1
+CloseEye.Font = Enum.Font.Highway;CloseEye.Text = "-"
+CloseEye.TextScaled = true;CloseEye.ZIndex = 3
+CloseEye.TextColor3 = Color3.new(1, 1, 1);UICornerCloseEye.Parent = CloseEye
+CloseEye.Activated:Connect(function()
+	if Frame1.Visible == false then		
+		Frame1.Visible = true
+	else
+		Frame1.Visible = false
+	end
+end)
+local function ActiveMain(Frame, ColorFrame)	
+	FrameContro1.Visible = false; ColorFrameMain1.BackgroundColor3 = Color3.new(0.0627451, 0.0627451, 0.0627451)
+	FrameContro2.Visible = false; ColorFrameMain2.BackgroundColor3 = Color3.new(0.0627451, 0.0627451, 0.0627451)
+	FrameContro4.Visible = false; ColorFrameMain4.BackgroundColor3 = Color3.new(0.0627451, 0.0627451, 0.0627451)
+	FrameContro5.Visible = false; ColorFrameMain5.BackgroundColor3 = Color3.new(0.0627451, 0.0627451, 0.0627451)
+	FrameContro6.Visible = false; ColorFrameMain6.BackgroundColor3 = Color3.new(0.0627451, 0.0627451, 0.0627451)
+	Frame.Visible = true;	ColorFrame.BackgroundColor3 = Color3.new(0.415686, 0, 1)
+end
+ButtonMain1.Activated:Connect(function() ActiveMain(FrameContro1, ColorFrameMain1) end)
+ButtonMain2.Activated:Connect(function() ActiveMain(FrameContro2, ColorFrameMain2) end)
+ButtonMain4.Activated:Connect(function() ActiveMain(FrameContro4, ColorFrameMain4) end)
+ButtonMain5.Activated:Connect(function() ActiveMain(FrameContro5, ColorFrameMain5) end)
+ButtonMain6.Activated:Connect(function() ActiveMain(FrameContro6, ColorFrameMain6) end)
+
+wait(1.5); LoadTextLabel1.Text = "ขอบคุณที่ใช้สคริปนะครับ"; wait(1.5)
+local goal1 = {Position = LoadFrame2.Position - UDim2.new(0, 0, 0, 0),
+	Size = UDim2.new(LoadFrame2.Size.X.Scale, LoadFrame2.Size.X.Offset, 0, 0)}
+local tweenInfo1 = TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+local tween1 = TweenService:Create(LoadFrame2, tweenInfo1, goal1)
+tween1:Play()
+task.wait(0.5)
+LoadFrame2:Destroy()
+
+local Fruits = {
+	Common = {"Carrot", "Strawberry"},
+	Uncommon = {"Blueberry", "Orange Tulip"},
+	Rare = {"Tomato", "Corn", "Daffodil"},
+	Legendary = {"Watermelon", "Pumpkikn", "Apple", "Bamboo"},
+	Mythical = {"Coconut", "Cactus", "Dragon Fruit", "Mango", "Grape"},
+	Divine = {"Mushroom", "Pepper", "Cacao"}
+}
+local BuySeedStock = game:GetService("ReplicatedStorage"):FindFirstChild("GameEvents"):FindFirstChild("BuySeedStock")
+
+local function TryBuySeeds(rarityName, isEnabled)
+	if isEnabled then
+		for _, seedName in ipairs(Fruits[rarityName]) do
+            BuySeedStock:FireServer(seedName)
+		end
+	end
+end
+task.spawn(function()
+	while true do
+        TryBuySeeds("Common", AutoBuySeedCommon)
+        TryBuySeeds("Uncommon", AutoBuySeedUncommon)
+        TryBuySeeds("Rare", AutoBuySeedRare)
+        TryBuySeeds("Legendary", AutoBuySeedLegendary)
+        TryBuySeeds("Mythical", AutoBuySeedMythical)
+        TryBuySeeds("Divine", AutoBuySeedDivine)
+        wait(0.01)
+    end
+end)
+
+
+task.spawn(function()
+	local NightQuestRemoteEvent = game:GetService("ReplicatedStorage"):FindFirstChild("GameEvents"):FindFirstChild("NightQuestRemoteEvent")
+	while true do
+		if TakePlantToOwn == true then
+			TakePlantToOIR = true			
+			NightQuestRemoteEvent:FireServer("SubmitAllPlants")
+			TakePlantToOIR = false
+		end
+		wait(1) 		
+	end
+end)
+
+task.spawn(function()---------------------Find Player Farm Place
+	while wait(1) do
+		if PlayerFarm == nil then
+			local Farms = workspace:FindFirstChild("Farm")
+			repeat
+				for _, Farm in ipairs(Farms:GetChildren()) do
+					if Farm:FindFirstChild("Important") and Farm:FindFirstChild("Important"):FindFirstChild("Data") then
+						local FarmData = Farm:FindFirstChild("Important"):FindFirstChild("Data")
+						if FarmData:FindFirstChild("Owner") then
+							local OwnerFarm = FarmData:FindFirstChild("Owner").Value							
+							if OwnerFarm == player.Name then
+								PlayerFarm = Farm; print("!! Found Player Farm !!")
+								PetArea = Farm:FindFirstChild("PetArea")
+							end
+						end
+					end
+				end
+				wait(1)
+			until PlayerFarm ~= nil
+		end
+	end
+end)
+local allowedKeywords = {
+	"Strawberry",
+	"Carrot",
+	"Blueberry",
+	"Tomato",
+	"Raspberry",
+	"Cranberry"
+}
+local function matchesAllowedKeyword(value)
+	value = value:lower()
+	for _, keyword in ipairs(allowedKeywords) do
+		if string.find(value, keyword:lower()) then
+			return true
+		end
+	end
+	return false
+end
+local function equipToolWithItemStringMatch(player)
+	local backpack = player:FindFirstChild("Backpack")
+	local character = player.Character
+	if not backpack or not character then return "NotFound" end
+	local allTools = {}
+	for _, tool in ipairs(backpack:GetChildren()) do
+		if tool:IsA("Tool") then
+			table.insert(allTools, tool)
+		end
+	end
+	for _, tool in ipairs(character:GetChildren()) do
+		if tool:IsA("Tool") then
+			table.insert(allTools, tool)
+		end
+	end
+	for _, tool in ipairs(allTools) do
+		local itemString = tool:FindFirstChild("Item_String")
+		if itemString and itemString:IsA("StringValue") then
+			if matchesAllowedKeyword(itemString.Value) then
+				tool.Parent = character
+				return true
+			end
+		end
+	end
+	return "NotFound"
+end
+local function GetnearestPet()
+	local nearestPet = nil
+	local minDistance = math.huge
+	local playerPosition = HMNRT.Position
+	local function GetNearFungtion(EnamyModel)
+		if EnamyModel:IsA("Model") and EnamyModel.PrimaryPart then
+			local PetAreaPosition = PetArea.Position
+			local RootPart = EnamyModel.PrimaryPart
+			local distance = (PetAreaPosition - RootPart.Position).Magnitude
+			if distance < minDistance then
+				if distance <= 70 then
+					if distance < minDistance then
+						minDistance = distance
+						nearestPet = EnamyModel
+					end
+				end
+			end
+		end
+	end
+	local PetsPhysical = workspace:FindFirstChild("PetsPhysical")
+	for _, Pet in ipairs(PetsPhysical:GetChildren()) do
+		if Pet:FindFirstChildOfClass("Model") then
+			local EnamyModel = Pet:FindFirstChildOfClass("Model")
+			if EnamyModel:IsA("Model") and EnamyModel.PrimaryPart then
+				GetNearFungtion(EnamyModel)
+			end
+		end
+	end
+	return nearestPet
+end
+
+task.spawn(function()
+	local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Linear)
+	while true do
+		if AutoFeedPet == true then
+			AutoFeedPetIsOn = true
+			local FeedProximity = nil
+			if PlayerFarm then
+				local Important = PlayerFarm:FindFirstChild("Important")
+				if Important and PetArea then
+					local originalCFrame = HMNRT.CFrame
+					local Plants_Physical = Important:FindFirstChild("Plants_Physical")
+					if Plants_Physical then
+						local result = equipToolWithItemStringMatch(player)
+						if result == "NotFound" then
+							AutoFarm = true
+							wait(1)
+							AutoFarm = false
+						end
+						local nearestPet = GetnearestPet()						
+						if nearestPet and AutoFeedPet == true then							
+							local tweenPet = TweenService:Create(HMNRT, tweenInfo, {CFrame = nearestPet.PrimaryPart.CFrame})
+							if FeedProximity == nil then
+								wait(1)
+								repeat
+									for _, Item in ipairs(workspace:GetChildren()) do
+										if Item:FindFirstChildOfClass("ProximityPrompt") then
+											local Prompt = Item:FindFirstChildOfClass("ProximityPrompt")
+											if Prompt then
+												FeedProximity = Prompt
+											end
+										end
+									end
+									wait(0.1)
+								until FeedProximity ~= nil
+							end
+							if FeedProximity and AutoFeedPet == true then
+								equipToolWithItemStringMatch(player)
+								tweenPet:Play()
+								tweenPet.Completed:Connect(function()
+									fireproximityprompt(FeedProximity)
+									wait(0.2)
+								end)
+							end
+						end
+
+					end
+				end
+			end
+			AutoFeedPetIsOn = false
+		end
+		wait(5)
+	end
+end)
+
+task.spawn(function()
+	local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Linear)
+	while wait(1) do
+		if AutoFarm == true then
+			if PlayerFarm then
+				local Important = PlayerFarm:FindFirstChild("Important")
+				if Important then				
+					local originalCFrame = HMNRT.CFrame
+					local Plants_Physical = Important:FindFirstChild("Plants_Physical")
+					if Plants_Physical then
+						for _, PlantModel in ipairs(Plants_Physical:GetChildren()) do
+							if PlantModel:IsA("Model") and PlantModel:FindFirstChild("Fruits") then
+								local Fruits = PlantModel:FindFirstChild("Fruits")
+								if not PlantModel:FindFirstChild("Fruits") then
+									Fruits = PlantModel
+								end
+								for _, FruitsModel in ipairs(Fruits:GetChildren()) do
+									for _, FruitsModelv2 in ipairs(FruitsModel:GetChildren()) do
+										if FruitsModelv2:IsA("BasePart") and FruitsModelv2:FindFirstChildOfClass("ProximityPrompt") then
+											if AutoFarm == true and AutoSellOn == false then
+												local ProximityPrompt = FruitsModelv2:FindFirstChildOfClass("ProximityPrompt")
+												local tweenToTarget = TweenService:Create(HMNRT, tweenInfo, {CFrame = ProximityPrompt.Parent.CFrame})
+												tweenToTarget:Play()
+												wait(0.2)
+												fireproximityprompt(ProximityPrompt)
+												wait(0.1)
+											end
+										end
+									end
+								end
+							end
+						end
+						local tweenBack = TweenService:Create(HMNRT, tweenInfo, {CFrame = originalCFrame})
+						tweenBack:Play()
+					end
+				end
+			end
+		end
+	end
+end)
+
+task.spawn(function()------------- } Moon Fruit Event 0 {
+	local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Linear)
+	while wait(1) do
+		if AutoGetMoonFruit == true then
+			if PlayerFarm then
+				local Important = PlayerFarm:FindFirstChild("Important")
+				if Important then				
+					local originalCFrame = HMNRT.CFrame
+					local Plants_Physical = Important:FindFirstChild("Plants_Physical")
+					if Plants_Physical then
+						for _, PlantModel in ipairs(Plants_Physical:GetChildren()) do
+							if PlantModel:IsA("Model") and PlantModel:FindFirstChild("Fruits") then
+								local Fruits = PlantModel:FindFirstChild("Fruits")
+								if not PlantModel:FindFirstChild("Fruits") then
+									Fruits = PlantModel
+								end
+								for _, FruitsModel in ipairs(Fruits:GetChildren()) do
+									for _, FruitsModelv2 in ipairs(FruitsModel:GetChildren()) do
+										if FruitsModelv2:IsA("BasePart") and FruitsModelv2:FindFirstChild("COLOR") then
+											for _, FruitsModelv3 in ipairs(FruitsModel:GetChildren()) do
+												if FruitsModelv3:IsA("BasePart") and FruitsModelv3:FindFirstChildOfClass("ProximityPrompt") then
+													if AutoGetMoonFruit == true and AutoSellOn == false then
+														local ProximityPrompt = FruitsModelv3:FindFirstChildOfClass("ProximityPrompt")
+														local tweenToTarget = TweenService:Create(HMNRT, tweenInfo, {CFrame = ProximityPrompt.Parent.CFrame})
+														tweenToTarget:Play()
+														wait(0.2)
+														fireproximityprompt(ProximityPrompt)
+														wait(0.1)
+													end
+												end
+											end
+										end
+									end
+								end
+							end
+						end
+						local tweenBack = TweenService:Create(HMNRT, tweenInfo, {CFrame = originalCFrame})
+						tweenBack:Play()
+						CanTakeFruitToBee = true
+						wait(1)
+						CanTakeFruitToBee = false
+					end
+				end
+			end
+		end
+	end
+end)
+
+task.spawn(function()
+	local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Linear)
+	while true do
+		if AutoSell == true then
+			AutoSellOn = true
+			local SellRemote = game:FindFirstChild("ReplicatedStorage"):FindFirstChild("GameEvents"):FindFirstChild("Sell_Inventory")	
+			local targetCFrame = CFrame.new(61.5776634, 2.99999976, 0.426792443, 0.00177166925, -3.37897221e-09, -0.99999845, -7.44731208e-13, 1, -3.37897887e-09, 0.99999845, 6.73116294e-12, 0.00177166925)
+			local originalCFrame = HMNRT.CFrame
+			local tweenInfo = TweenInfo.new(0.1, Enum.EasingStyle.Linear)
+			local tweenToTarget = TweenService:Create(HMNRT, tweenInfo, {CFrame = targetCFrame})
+			tweenToTarget:Play()
+			tweenToTarget.Completed:Connect(function()
+				wait(0.2)
+				if AutoSell == true  then
+					SellRemote:FireServer()
+				end
+				wait(0.2)
+				local tweenBack = TweenService:Create(HMNRT, tweenInfo, {CFrame = originalCFrame})
+				tweenBack:Play()
+			end)
+			AutoSellOn = false
+		end
+		if AutoFarm == true then
+			local ticktime = 0
+			repeat
+				ticktime += 1
+				wait(1)
+			until AutoFarm == false or ticktime >= 18
+		end
+		wait(1)
+	end
+end)
+
+task.spawn(function()
+	while true do		
+		if EnabledWalkSpeed == true then
+			local moveDirection = humanoid.MoveDirection
+			HMNRT.AssemblyLinearVelocity = moveDirection * WalkSpeedValue + Vector3.new(0, HMNRT.AssemblyLinearVelocity.Y, 0)
+		end		
+		if gradient.Offset.Y < 1 then
+			gradient.Offset += Vector2.new(0, 0.02)
+		else
+			gradient.Offset = Vector2.new(0, -1)
+		end
+		task.wait(0.01)
+	end
+end)
+
+task.spawn(function()
+	local Backpack = player.Backpack
+    local MachineInteractargs = {"MachineInteract"}
+    local HoneyMachineService_RE = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("HoneyMachineService_RE")
+	while wait(0.1) do
+		local OldCFrameHMNRT = HMNRT.CFrame
+		local FoundPoliFruit = false
+		if CanTakeFruitToBee == true then
+			for _, Fruist in ipairs(Backpack:GetChildren()) do
+				if Fruist:IsA("Tool") then
+					for _, part in ipairs(Fruist:GetChildren()) do
+						if part:IsA("BasePart") and part:FindFirstChild("COLOR") and CanTakeFruitToBee == true then
+							if not character:FindFirstChildOfClass("Tool") then
+								Fruist.Parent = character
+							    FoundPoliFruit = true
+							end
+						end
+					end
+				end
+				if FoundPoliFruit == true then
+					HMNRT.CFrame = CFrame.new(-109.559044, 4.03001356, -12.8144922, 0.255481929, 0, 0.966813803, 0, 1, 0, -0.966813803, 0, 0.255481929)
+					wait(0.05)
+					HoneyMachineService_RE:FireServer(unpack(MachineInteractargs))
+					FoundPoliFruit = false
+					wait(0.05)
+				    HMNRT.CFrame = OldCFrameHMNRT
+					
+					for _, partCH in ipairs(character:GetChildren()) do
+						if partCH:IsA("Tool") then
+							partCH.Parent = Backpack
+						end
+					end
+
+                end
+			end
+		end
+	end
+end)
+
+task.spawn(function()
+	local BuyEventShopStock = game:GetService("ReplicatedStorage"):FindFirstChild("GameEvents"):FindFirstChild("BuyEventShopStock")
+    local Flower_Seed_Pack_args = {"Flower Seed Pack"}
+	local Bee_Egg_args = {"Bee Egg"}
+	local Bee_Crate_args = {"Bee Crate"}
+	while true do
+		if AutoBuyBeeEgg == true then
+			for i = 1 , 10 do
+				BuyEventShopStock:FireServer(unpack(Bee_Egg_args))
+				wait(0.25)
+			end
+		end
+		if AutoBuyBeeSeedPack == true then
+			for i = 1 , 10 do
+				BuyEventShopStock:FireServer(unpack(Flower_Seed_Pack_args))
+				print("Flower_Seed_Pack_args")
+				wait(0.25)
+			end
+		end
+		if AutoBuyBeeCrate == true then
+			for i = 1 , 10 do
+				BuyEventShopStock:FireServer(unpack(Bee_Crate_args))
+				wait(0.25)
+			end
+		end
+		wait(15)
+	end
+end)
