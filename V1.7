@@ -207,6 +207,7 @@ local Frame3 = NewFrame("Frame" ,UDim2.new(0, 0,0, 0) ,UDim2.new(0.4, 0,1, 0), 0
 local FrameControTarget = NewFrame("Frame" ,UDim2.new(1, 0,0, 0) ,UDim2.new(0.6, 0,1, 0), 2, Frame2, Color3.new(0.0823529, 0.0823529, 0.0823529), "", false)
 local FrameContro1 = NewFrame("Frame" ,UDim2.new(.4, 0,0, 0) ,UDim2.new(0.6, 0,1, 0), 0, Frame2, ColorTheme, "", false); FrameContro1.Name = "FrameContro1"
 local FrameContro2 = NewFrame("Frame" ,UDim2.new(.4, 0,0, 0) ,UDim2.new(0.6, 0,1, 0), 0, Frame2, ColorTheme, "", false); FrameContro2.Name = "FrameContro2"
+local FrameContro3 = NewFrame("Frame" ,UDim2.new(.4, 0,0, 0) ,UDim2.new(0.6, 0,1, 0), 0, Frame2, ColorTheme, "", false); FrameContro3.Name = "FrameContro3"
 local FrameContro4 = NewFrame("Frame" ,UDim2.new(.4, 0,0, 0) ,UDim2.new(0.6, 0,1, 0), 0, Frame2, ColorTheme, "", false); FrameContro4.Name = "FrameContro4"
 local FrameContro5 = NewFrame("Frame" ,UDim2.new(.4, 0,0, 0) ,UDim2.new(0.6, 0,1, 0), 0, Frame2, ColorTheme, "", false); FrameContro5.Name = "FrameContro5"
 local FrameContro6 = NewFrame("Frame" ,UDim2.new(.4, 0,0, 0) ,UDim2.new(0.6, 0,1, 0), 0, Frame2, ColorTheme, "", false); FrameContro6.Name = "FrameContro6"
@@ -303,7 +304,7 @@ local ButtonCon8 = Instance.new("TextButton")
 SetButtonText(ButtonCon8, UDim2.new(0.06, 0,0.1, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro4, Color3.new(0.294118, 0.294118, 0.294118) , "<b> จุดขายเมล็ด 🌱 </b>")
 ButtonCon8.Activated:Connect(function()
 	local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Linear)
-	local NewCFrame = CFrame.new(61.5854721, 2.99999976, -27.0039806, 7.7495434e-15, 8.8112273e-09, -1, -6.58821869e-12, 1, 8.8112273e-09, 1, 6.58821869e-12, 7.74960184e-15)
+	local NewCFrame = CFrame.new(86.5831146, 2.99999976, -27.0039825, -0.000889317715, -8.37702459e-08, -0.999999583, 1.19696943e-11, 1, -8.37702885e-08, 0.999999583, -8.64680896e-11, -0.000889317715)
 	local tweenToTarget = TweenService:Create(HMNRT, tweenInfo, {CFrame = NewCFrame})
 	tweenToTarget:Play()
 end)
@@ -311,7 +312,7 @@ local ButtonCon9 = Instance.new("TextButton")
 SetButtonText(ButtonCon9, UDim2.new(0.06, 0,0.25, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro4, Color3.new(0.294118, 0.294118, 0.294118) , "<b> จุดขายผลไม้ 🍍 </b>")
 ButtonCon9.Activated:Connect(function()
 	local tweenInfo = TweenInfo.new(0.1, Enum.EasingStyle.Linear)
-	local NewCFrame = CFrame.new(61.5854721, 2.99999976, 0.426784515, -3.83952337e-13, 1.6424716e-09, -1, 5.88446003e-09, 1, 1.6424716e-09, 1, -5.88446003e-09, -3.83962014e-13)
+	local NewCFrame = CFrame.new(86.5899353, 2.99999976, 0.426799476, -0.00322710886, 8.88386111e-08, -0.999994814, -6.18547878e-12, 1, 8.88390872e-08, 0.999994814, 2.9287886e-10, -0.00322710886)
 	local tweenToTarget = TweenService:Create(HMNRT, tweenInfo, {CFrame = NewCFrame})
 	tweenToTarget:Play()
 end)
@@ -319,7 +320,7 @@ local ButtonCon11 = Instance.new("TextButton")
 SetButtonText(ButtonCon11, UDim2.new(0.06, 0,0.4, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro4, Color3.new(0.294118, 0.294118, 0.294118) , "<b> จุดขายใข่สัตว์เลี้ยง 🐶 </b>")
 ButtonCon11.Activated:Connect(function()
 	local tweenInfo = TweenInfo.new(0.1, Enum.EasingStyle.Linear)
-	local NewCFrame = CFrame.new(-252.128983, 2.99999976, -2.67034841, 0.0180913769, 2.80647043e-08, 0.999836326, -1.02434872e-09, 1, -2.80507635e-08, -0.999836326, -5.16704124e-10, 0.0180913769)
+	local NewCFrame = CFrame.new(-280.301514, 2.99999976, 3.14274955, -0.00374122662, 4.63038496e-08, 0.999993026, 1.05966386e-07, 1, -4.59077292e-08, -0.999993026, 1.05793895e-07, -0.00374122662)
 	local tweenToTarget = TweenService:Create(HMNRT, tweenInfo, {CFrame = NewCFrame})
 	tweenToTarget:Play()
 end)
@@ -327,7 +328,7 @@ local ButtonCon12 = Instance.new("TextButton")
 SetButtonText(ButtonCon12, UDim2.new(0.06, 0,0.55, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro4, Color3.new(0.294118, 0.294118, 0.294118) , "<b> จุดขายอุปกรณ์ 🧰 </b>")
 ButtonCon12.Activated:Connect(function()
 	local tweenInfo = TweenInfo.new(0.1, Enum.EasingStyle.Linear)
-	local NewCFrame = CFrame.new(-261.396271, 2.99999976, -31.3658257, -0.00704089738, -2.63061093e-08, 0.999975204, 4.10310399e-08, 1, 2.65956643e-08, -0.999975204, 4.12172803e-08, -0.00704089738)
+	local NewCFrame = CFrame.new(-284.172638, 2.99999976, -32.7624016, -0.000779807277, 4.28658922e-08, 0.999999702, -2.86251272e-08, 1, -4.28882281e-08, -0.999999702, -2.86585635e-08, -0.000779807277)
 	local tweenToTarget = TweenService:Create(HMNRT, tweenInfo, {CFrame = NewCFrame})
 	tweenToTarget:Play()
 end)
@@ -474,14 +475,71 @@ ButtonCon26.Activated:Connect(function()
 		AutoBuyBeeCrate = false
 	end
 end)
+local ButtonCon27 = Instance.new("TextButton") ; local AutoBuyBCSprinkler = false
+SetButtonText(ButtonCon27, UDim2.new(0.06, 0,0.1, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro3, Color3.new(0.294118, 0.294118, 0.294118) , "<b> เบสิค สปริงเกอร์ 📌 </b>")
+ButtonCon27.Activated:Connect(function()
+	if AutoBuyBCSprinkler == false then
+		ButtonCon27.Text = "<b> เบสิค สปริงเกอร์ 🟢 </b>"
+		AutoBuyBCSprinkler = true
+	else
+		ButtonCon27.Text = "<b> เบสิค สปริงเกอร์ 📌 </b>"
+		AutoBuyBCSprinkler = false
+	end
+end)
+local ButtonCon28 = Instance.new("TextButton") ; local HoneyEventShop_UI = plrGui:FindFirstChild("HoneyEventShop_UI")
+SetButtonText(ButtonCon28, UDim2.new(0.06, 0,0.55, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro2, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ร้านค้าน้ำผึ้ง 🍯 </b>")
+ButtonCon28.Activated:Connect(function()
+	if HoneyEventShop_UI then
+		if HoneyEventShop_UI.Enabled == false then
+		   HoneyEventShop_UI.Enabled = true
+	    else
+		   HoneyEventShop_UI.Enabled = false
+	   end
+	end	
+end)
+local ButtonCon28 = Instance.new("TextButton") ; local AutoBuyAdSprinkler = false
+SetButtonText(ButtonCon28, UDim2.new(0.06, 0,0.25, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro3, Color3.new(0.294118, 0.294118, 0.294118) , "<b> แอดวานซ์ สปริงเกอร์ 📌 </b>")
+ButtonCon28.Activated:Connect(function()
+	if AutoBuyAdSprinkler == false then
+		ButtonCon28.Text = "<b> เบสิค สปริงเกอร์ 🟢 </b>"
+		AutoBuyAdSprinkler = true
+	else
+		ButtonCon28.Text = "<b> เบสิค สปริงเกอร์ 📌 </b>"
+		AutoBuyAdSprinkler = false
+	end
+end)
+local ButtonCon29 = Instance.new("TextButton") ; local AutoBuyGodSprinkler = false
+SetButtonText(ButtonCon29, UDim2.new(0.06, 0,0.4, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro3, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ก็อดลี่ สปริงเกอร์ 📌 </b>")
+ButtonCon29.Activated:Connect(function()
+	if AutoBuyGodSprinkler == false then
+		ButtonCon29.Text = "<b> เบสิค สปริงเกอร์ 🟢 </b>"
+		AutoBuyGodSprinkler = true
+	else
+		ButtonCon29.Text = "<b> เบสิค สปริงเกอร์ 📌 </b>"
+		AutoBuyGodSprinkler = false
+	end
+end)
+local ButtonCon29 = Instance.new("TextButton") ; local AutoBuyMasSprinkler = false
+SetButtonText(ButtonCon29, UDim2.new(0.06, 0,0.55, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro3, Color3.new(0.294118, 0.294118, 0.294118) , "<b> มาสเตอร์ สปริงเกอร์ 📌 </b>")
+ButtonCon29.Activated:Connect(function()
+	if AutoBuyMasSprinkler == false then
+		ButtonCon29.Text = "<b> เบสิค สปริงเกอร์ 🟢 </b>"
+		AutoBuyMasSprinkler = true
+	else
+		ButtonCon29.Text = "<b> เบสิค สปริงเกอร์ 📌 </b>"
+		AutoBuyMasSprinkler = false
+	end
+end)
+
 
 local WalkSpeedslider = createSlider(FrameContro1, UDim2.new(0.06, 0, 0.3, 0), UDim2.new(0.85, 0, 0.05, 0), 0, 200, 16, "ความเร็วการเดิน")
 
 local ButtonMain1 = Instance.new("TextButton") ButtonMain1.BackgroundTransparency = .7 local ColorFrameMain1 = SetButtonText(ButtonMain1, UDim2.new(0.017, 0,0.1, 0), UDim2.new(0.37, 0,0.1, 0), 1, Frame2, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ผู้เล่น 👤 </b>", "Main")
 local ButtonMain2 = Instance.new("TextButton") ButtonMain2.BackgroundTransparency = .7 local ColorFrameMain2 = SetButtonText(ButtonMain2, UDim2.new(0.017, 0,0.25, 0), UDim2.new(0.37, 0,0.1, 0), 1, Frame2, Color3.new(0.294118, 0.294118, 0.294118) , "<b> หน้าต่าง UI 🌐 </b>", "Main")
 local ButtonMain4 = Instance.new("TextButton") ButtonMain4.BackgroundTransparency = .7 local ColorFrameMain4 = SetButtonText(ButtonMain4, UDim2.new(0.017, 0,0.4, 0), UDim2.new(0.37, 0,0.1, 0), 1, Frame2, Color3.new(0.294118, 0.294118, 0.294118) , "<b> วาร์ป 🌀 </b>", "Main")
-local ButtonMain5 = Instance.new("TextButton") ButtonMain5.BackgroundTransparency = .7 local ColorFrameMain5 = SetButtonText(ButtonMain5, UDim2.new(0.017, 0,0.7, 0), UDim2.new(0.37, 0,0.1, 0), 1, Frame2, Color3.new(0.294118, 0.294118, 0.294118) , "<b> อีเว้นท์ 🐝 </b>", "Main")
-local ButtonMain6 = Instance.new("TextButton") ButtonMain6.BackgroundTransparency = .7 local ColorFrameMain6 = SetButtonText(ButtonMain6, UDim2.new(0.017, 0,0.55, 0), UDim2.new(0.37, 0,0.1, 0), 1, Frame2, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ซื้อเมล็ดออโต้ 🌱 </b>", "Main")
+local ButtonMain5 = Instance.new("TextButton") ButtonMain5.BackgroundTransparency = .7 local ColorFrameMain5 = SetButtonText(ButtonMain5, UDim2.new(0.017, 0,0.85, 0), UDim2.new(0.37, 0,0.1, 0), 1, Frame2, Color3.new(0.294118, 0.294118, 0.294118) , "<b> อีเว้นท์ 🐝 </b>", "Main")
+local ButtonMain3 = Instance.new("TextButton") ButtonMain3.BackgroundTransparency = .7 local ColorFrameMain3 = SetButtonText(ButtonMain3, UDim2.new(0.017, 0,0.7, 0), UDim2.new(0.37, 0,0.1, 0), 1, Frame2, Color3.new(0.294118, 0.294118, 0.294118) , "<b>   ซื้อเครื่องมือออโต้ 🔧 </b>", "Main")
+local ButtonMain6 = Instance.new("TextButton") ButtonMain6.BackgroundTransparency = .7 local ColorFrameMain6 = SetButtonText(ButtonMain6, UDim2.new(0.017, 0,0.55, 0), UDim2.new(0.37, 0,0.1, 0), 1, Frame2, Color3.new(0.294118, 0.294118, 0.294118) , "<b>   ซื้อเมล็ดออโต้ 🌱 </b>", "Main")
 local LineFrame = NewFrame("Frame", UDim2.new(0.405, 0,0.08, 0), UDim2.new(0.01, 0,0.9, 0), 3, Frame2, Color3.new(1, 1, 1))
 local gradient = Instance.new("UIGradient", LineFrame); gradient.Rotation = 90; gradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(45, 45, 45)), 	ColorSequenceKeypoint.new(0.5, Color3.fromRGB(93, 0, 255)), ColorSequenceKeypoint.new(1, Color3.fromRGB(45, 45, 45))}
 Close = Instance.new("TextButton");Close.Parent = Frame1
@@ -511,6 +569,7 @@ end)
 local function ActiveMain(Frame, ColorFrame)	
 	FrameContro1.Visible = false; ColorFrameMain1.BackgroundColor3 = Color3.new(0.0627451, 0.0627451, 0.0627451)
 	FrameContro2.Visible = false; ColorFrameMain2.BackgroundColor3 = Color3.new(0.0627451, 0.0627451, 0.0627451)
+	FrameContro3.Visible = false; ColorFrameMain3.BackgroundColor3 = Color3.new(0.0627451, 0.0627451, 0.0627451)
 	FrameContro4.Visible = false; ColorFrameMain4.BackgroundColor3 = Color3.new(0.0627451, 0.0627451, 0.0627451)
 	FrameContro5.Visible = false; ColorFrameMain5.BackgroundColor3 = Color3.new(0.0627451, 0.0627451, 0.0627451)
 	FrameContro6.Visible = false; ColorFrameMain6.BackgroundColor3 = Color3.new(0.0627451, 0.0627451, 0.0627451)
@@ -518,6 +577,7 @@ local function ActiveMain(Frame, ColorFrame)
 end
 ButtonMain1.Activated:Connect(function() ActiveMain(FrameContro1, ColorFrameMain1) end)
 ButtonMain2.Activated:Connect(function() ActiveMain(FrameContro2, ColorFrameMain2) end)
+ButtonMain3.Activated:Connect(function() ActiveMain(FrameContro3, ColorFrameMain3) end)
 ButtonMain4.Activated:Connect(function() ActiveMain(FrameContro4, ColorFrameMain4) end)
 ButtonMain5.Activated:Connect(function() ActiveMain(FrameContro5, ColorFrameMain5) end)
 ButtonMain6.Activated:Connect(function() ActiveMain(FrameContro6, ColorFrameMain6) end)
@@ -921,6 +981,41 @@ task.spawn(function()
 		if AutoBuyBeeCrate == true then
 			for i = 1 , 10 do
 				BuyEventShopStock:FireServer(unpack(Bee_Crate_args))
+				wait(0.25)
+			end
+		end
+		wait(15)
+	end
+end)
+
+task.spawn(function()
+	local BuyGearStock = game:GetService("ReplicatedStorage"):FindFirstChild("GameEvents"):FindFirstChild("BuyGearStock")
+    local Basic_Sprinkler_Args = {"Basic Sprinkler"}
+    local Advanced_Sprinkler_Args = {"Advanced Sprinkler"}
+    local Godly_Sprinkler_Args = {"Godly Sprinkler"}
+    local Master_Sprinkler_Args = {"Master Sprinkler"}   
+	while true do
+		if AutoBuyBCSprinkler == true then
+			for i = 1 , 10 do
+				BuyEventShopStock:FireServer(unpack(Basic_Sprinkler_Args))
+				wait(0.25)
+			end
+		end
+		if AutoBuyAdSprinkler == true then
+			for i = 1 , 10 do
+				BuyEventShopStock:FireServer(unpack(Advanced_Sprinkler_Args))
+				wait(0.25)
+			end
+		end
+		if AutoBuyGodSprinkler == true then
+			for i = 1 , 10 do
+				BuyEventShopStock:FireServer(unpack(Godly_Sprinkler_Args))
+				wait(0.25)
+			end
+		end
+		if AutoBuyMasSprinkler == true then
+			for i = 1 , 10 do
+				BuyEventShopStock:FireServer(unpack(Master_Sprinkler_Args))
 				wait(0.25)
 			end
 		end
