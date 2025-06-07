@@ -174,7 +174,7 @@ StratIcon.Activated:Connect(function()
 	end
 end)
 local TextLable1 = Instance.new("TextLabel") TextLable1.TextXAlignment = Enum.TextXAlignment.Left
-SetButtonText(TextLable1, UDim2.new(0.11, 0,0.07, 0), UDim2.new(0.7, 0,0.9, 0), 4, Frame1, 1 , "<b>Somtank V1.73</b>", "Left")
+SetButtonText(TextLable1, UDim2.new(0.11, 0,0.07, 0), UDim2.new(0.7, 0,0.9, 0), 4, Frame1, 1 , "<b>Somtank V1.75</b>", "Left")
 TextLable1.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
 		dragging = true
@@ -945,14 +945,12 @@ task.spawn(function()
 					HoneyMachineService_RE:FireServer(unpack(MachineInteractargs))
 					FoundPoliFruit = false
 					wait(0.05)
-				    HMNRT.CFrame = OldCFrameHMNRT
-					
+				    HMNRT.CFrame = OldCFrameHMNRT					
 					for _, partCH in ipairs(character:GetChildren()) do
 						if partCH:IsA("Tool") then
 							partCH.Parent = Backpack
 						end
 					end
-
                 end
 			end
 		end
@@ -993,36 +991,33 @@ task.spawn(function()
     local Basic_Sprinkler_Args = {"Basic Sprinkler"}
     local Advanced_Sprinkler_Args = {"Advanced Sprinkler"}
     local Godly_Sprinkler_Args = {"Godly Sprinkler"}
-    local Master_Sprinkler_Args = {"Master Sprinkler"}   
+    local Master_Sprinkler_Args = {"Master Sprinkler"}
 	while true do
 		if AutoBuyBCSprinkler == true then
 			for i = 1 , 10 do
-				BuyEventShopStock:FireServer(unpack(Basic_Sprinkler_Args))
+				BuyGearStock:FireServer(unpack(Basic_Sprinkler_Args))
 				wait(0.25)
 			end
 		end
 		if AutoBuyAdSprinkler == true then
 			for i = 1 , 10 do
-				BuyEventShopStock:FireServer(unpack(Advanced_Sprinkler_Args))
+				BuyGearStock:FireServer(unpack(Advanced_Sprinkler_Args))
 				wait(0.25)
 			end
 		end
 		if AutoBuyGodSprinkler == true then
 			for i = 1 , 10 do
-				BuyEventShopStock:FireServer(unpack(Godly_Sprinkler_Args))
+				BuyGearStock:FireServer(unpack(Godly_Sprinkler_Args))
 				wait(0.25)
 			end
 		end
 		if AutoBuyMasSprinkler == true then
 			for i = 1 , 10 do
-				BuyEventShopStock:FireServer(unpack(Master_Sprinkler_Args))
+				BuyGearStock:FireServer(unpack(Master_Sprinkler_Args))
 				wait(0.25)
 			end
 		end
 		wait(15)
 	end
 end)
-
-
-
 
