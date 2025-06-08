@@ -174,7 +174,7 @@ StratIcon.Activated:Connect(function()
 	end
 end)
 local TextLable1 = Instance.new("TextLabel") TextLable1.TextXAlignment = Enum.TextXAlignment.Left
-SetButtonText(TextLable1, UDim2.new(0.11, 0,0.07, 0), UDim2.new(0.7, 0,0.9, 0), 4, Frame1, 1 , "<b>Somtank V1.75</b>", "Left")
+SetButtonText(TextLable1, UDim2.new(0.11, 0,0.07, 0), UDim2.new(0.7, 0,0.9, 0), 4, Frame1, 1 , "<b>Somtank V1.75.1</b>", "Left")
 TextLable1.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
 		dragging = true
@@ -501,10 +501,10 @@ local ButtonCon28 = Instance.new("TextButton") ; local AutoBuyAdSprinkler = fals
 SetButtonText(ButtonCon28, UDim2.new(0.06, 0,0.25, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro3, Color3.new(0.294118, 0.294118, 0.294118) , "<b> แอดวานซ์ สปริงเกอร์ 📌 </b>")
 ButtonCon28.Activated:Connect(function()
 	if AutoBuyAdSprinkler == false then
-		ButtonCon28.Text = "<b> เบสิค สปริงเกอร์ 🟢 </b>"
+		ButtonCon28.Text = "<b> แอดวานซ์ สปริงเกอร์ 🟢 </b>"
 		AutoBuyAdSprinkler = true
 	else
-		ButtonCon28.Text = "<b> เบสิค สปริงเกอร์ 📌 </b>"
+		ButtonCon28.Text = "<b> แอดวานซ์ สปริงเกอร์ 📌 </b>"
 		AutoBuyAdSprinkler = false
 	end
 end)
@@ -512,10 +512,10 @@ local ButtonCon29 = Instance.new("TextButton") ; local AutoBuyGodSprinkler = fal
 SetButtonText(ButtonCon29, UDim2.new(0.06, 0,0.4, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro3, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ก็อดลี่ สปริงเกอร์ 📌 </b>")
 ButtonCon29.Activated:Connect(function()
 	if AutoBuyGodSprinkler == false then
-		ButtonCon29.Text = "<b> เบสิค สปริงเกอร์ 🟢 </b>"
+		ButtonCon29.Text = "<b> ก็อดลี่ สปริงเกอร์ 🟢 </b>"
 		AutoBuyGodSprinkler = true
 	else
-		ButtonCon29.Text = "<b> เบสิค สปริงเกอร์ 📌 </b>"
+		ButtonCon29.Text = "<b> ก็อดลี่ สปริงเกอร์ 📌 </b>"
 		AutoBuyGodSprinkler = false
 	end
 end)
@@ -523,10 +523,10 @@ local ButtonCon29 = Instance.new("TextButton") ; local AutoBuyMasSprinkler = fal
 SetButtonText(ButtonCon29, UDim2.new(0.06, 0,0.55, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro3, Color3.new(0.294118, 0.294118, 0.294118) , "<b> มาสเตอร์ สปริงเกอร์ 📌 </b>")
 ButtonCon29.Activated:Connect(function()
 	if AutoBuyMasSprinkler == false then
-		ButtonCon29.Text = "<b> เบสิค สปริงเกอร์ 🟢 </b>"
+		ButtonCon29.Text = "<b> มาสเตอร์ สปริงเกอร์ 🟢 </b>"
 		AutoBuyMasSprinkler = true
 	else
-		ButtonCon29.Text = "<b> เบสิค สปริงเกอร์ 📌 </b>"
+		ButtonCon29.Text = "<b> มาสเตอร์ สปริงเกอร์ 📌 </b>"
 		AutoBuyMasSprinkler = false
 	end
 end)
@@ -982,7 +982,7 @@ task.spawn(function()
 				wait(0.25)
 			end
 		end
-		wait(15)
+		wait(5)
 	end
 end)
 
@@ -1017,7 +1017,7 @@ task.spawn(function()
 				wait(0.25)
 			end
 		end
-		wait(15)
+		wait(5)
 	end
 end)
 
