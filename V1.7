@@ -174,7 +174,7 @@ StratIcon.Activated:Connect(function()
 	end
 end)
 local TextLable1 = Instance.new("TextLabel") TextLable1.TextXAlignment = Enum.TextXAlignment.Left
-SetButtonText(TextLable1, UDim2.new(0.11, 0,0.07, 0), UDim2.new(0.7, 0,0.9, 0), 4, Frame1, 1 , "<b>Somtank V1.75.1</b>", "Left")
+SetButtonText(TextLable1, UDim2.new(0.11, 0,0.07, 0), UDim2.new(0.7, 0,0.9, 0), 4, Frame1, 1 , "<b>Somtank V1.75.6</b>", "Left")
 TextLable1.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
 		dragging = true
@@ -596,8 +596,8 @@ local Fruits = {
 	Uncommon = {"Blueberry", "Orange Tulip"},
 	Rare = {"Tomato", "Corn", "Daffodil"},
 	Legendary = {"Watermelon", "Pumpkikn", "Apple", "Bamboo"},
-	Mythical = {"Coconut", "Cactus", "Dragon Fruit", "Mango", "Grape"},
-	Divine = {"Mushroom", "Pepper", "Cacao"}
+	Mythical = {"Coconut", "Cactus", "Dragon Fruit", "Mango"},
+	Divine = {"Grape" ,"Mushroom", "Pepper", "Cacao", "Beanstalk", "Ember Lily", "Sugar Apple"}
 }
 local BuySeedStock = game:GetService("ReplicatedStorage"):FindFirstChild("GameEvents"):FindFirstChild("BuySeedStock")
 
@@ -833,6 +833,7 @@ task.spawn(function()------------- } Moon Fruit Event 0 {
 				if Important then				
 					local originalCFrame = HMNRT.CFrame
 					local Plants_Physical = Important:FindFirstChild("Plants_Physical")
+					local Scan_Time = 0
 					if Plants_Physical then
 						for _, PlantModel in ipairs(Plants_Physical:GetChildren()) do
 							if PlantModel:IsA("Model") and PlantModel:FindFirstChild("Fruits") then
@@ -845,12 +846,14 @@ task.spawn(function()------------- } Moon Fruit Event 0 {
 										if FruitsModelv2:IsA("BasePart") and FruitsModelv2:FindFirstChild("COLOR") then
 											for _, FruitsModelv3 in ipairs(FruitsModel:GetChildren()) do
 												if FruitsModelv3:IsA("BasePart") and FruitsModelv3:FindFirstChildOfClass("ProximityPrompt") then
-													if AutoGetMoonFruit == true and AutoSellOn == false then
+													if AutoGetMoonFruit == true and AutoSellOn == false and Scan_Time < 15 then
 														local ProximityPrompt = FruitsModelv3:FindFirstChildOfClass("ProximityPrompt")
 														local tweenToTarget = TweenService:Create(HMNRT, tweenInfo, {CFrame = ProximityPrompt.Parent.CFrame})
 														tweenToTarget:Play()
 														wait(0.2)
 														fireproximityprompt(ProximityPrompt)
+														Scan_Time += 1
+														print("Scan_Time : " .. Scan_Time)
 														wait(0.1)
 													end
 												end
