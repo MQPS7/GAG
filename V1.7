@@ -884,6 +884,13 @@ task.spawn(function()
 	while wait(1) do
 		if AutoGetMoonFruit == true then
 			local Hold = 0
+			if character:FindFirstChildOfClass("Tool") then
+				for _, ItemB in ipairs(character:GetChildren()) do
+				    if ItemB:IsA("Tool") then
+				    	ItemB.Parent = player.Backpack
+				    end
+			    end
+			end
 			for _, Item in ipairs(player.Backpack:GetChildren()) do
 				if Item:IsA("Tool") and FindNameEventSummer(Item.Name) and Hold < 3 then
 					Item.Parent = character
