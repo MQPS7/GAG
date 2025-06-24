@@ -174,7 +174,7 @@ StratIcon.Activated:Connect(function()
 	end
 end)
 local TextLable1 = Instance.new("TextLabel") TextLable1.TextXAlignment = Enum.TextXAlignment.Left
-SetButtonText(TextLable1, UDim2.new(0.11, 0,0.07, 0), UDim2.new(0.7, 0,0.9, 0), 4, Frame1, 1 , "<b>Somtank V1.78.2</b>", "Left")
+SetButtonText(TextLable1, UDim2.new(0.11, 0,0.07, 0), UDim2.new(0.7, 0,0.9, 0), 4, Frame1, 1 , "<b>Somtank V1.78.5</b>", "Left")
 TextLable1.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
 		dragging = true
@@ -869,13 +869,32 @@ task.spawn(function()---------    Summer Fruit
 	end
 end)
 
+local function FindNameEventSummer(value)
+	value = value:lower()
+	for _, keyword in ipairs(EventFruitsAllowed) do
+		if string.find(value, keyword:lower()) then
+			return true
+		end
+	end
+	return false
+end
 task.spawn(function()
 	local SummerHarvestRemoteEvent = game:GetService("ReplicatedStorage"):FindFirstChild("GameEvents"):FindFirstChild("SummerHarvestRemoteEvent")
 	local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Linear)
 	while wait(1) do
 		if AutoGetMoonFruit == true then
+			local Hold = 0
+			for _, Item in ipairs(player.Backpack:GetChildren()) do
+				if Item:IsA("Tool") and FindNameEventSummer(Item.Name) and Hold < 3 then
+					Item.Parent = character
+					Hold += 1
+				end
+			end
 			local SubmitHeldPlant = {"SubmitHeldPlant"}
-            SummerHarvestRemoteEvent:FireServer(unpack(SubmitHeldPlant))
+			for i = 1 , 3 do
+				SummerHarvestRemoteEvent:FireServer(unpack(SubmitHeldPlant))
+			end			
+            
 		end
 	end
 end)
