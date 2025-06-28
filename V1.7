@@ -8,6 +8,13 @@ local humanoid = character:FindFirstChildOfClass("Humanoid")
 local HMNRT = character:FindFirstChild("HumanoidRootPart")
 local Camera = workspace.CurrentCamera
 
+local Teleport_Gear = player.PlayerGui:FindFirstChild("Teleport_UI"):FindFirstChild("Frame"):FindFirstChild("Gear")
+local Teleport_Pets = player.PlayerGui:FindFirstChild("Teleport_UI"):FindFirstChild("Frame"):FindFirstChild("Pets")
+if Teleport_Gear and Teleport_Pets then
+    Teleport_Gear.Visible = true
+    Teleport_Pets.Visible = true
+end
+
 local AutoBuySeedCommon = false; local AutoBuySeedUncommon = false
 local AutoBuySeedRare = false; local AutoBuySeedMythical = false
 local AutoBuySeedDivine = false; local AutoBuySeedLegendary = false
@@ -174,7 +181,7 @@ StratIcon.Activated:Connect(function()
 	end
 end)
 local TextLable1 = Instance.new("TextLabel") TextLable1.TextXAlignment = Enum.TextXAlignment.Left
-SetButtonText(TextLable1, UDim2.new(0.11, 0,0.07, 0), UDim2.new(0.7, 0,0.9, 0), 4, Frame1, 1 , "<b>Somtank V1.78.5</b>", "Left")
+SetButtonText(TextLable1, UDim2.new(0.11, 0,0.07, 0), UDim2.new(0.7, 0,0.9, 0), 4, Frame1, 1 , "<b>Somtank</b>", "Left")
 TextLable1.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
 		dragging = true
@@ -1026,3 +1033,83 @@ task.spawn(function()
 	end
 end)
 
+local function formatMoney(value)
+	if value >= 1e15 then
+		return string.format("%.1fQ", value / 1e15)
+	elseif value >= 1e12 then
+		return string.format("%.1fT", value / 1e12)
+	elseif value >= 1e9 then
+		return string.format("%.1fB", value / 1e9)
+	elseif value >= 1e6 then
+		return string.format("%.1fM", value / 1e6)
+	elseif value >= 1e3 then
+		return string.format("%.1fk", value / 1e3)
+	else
+		return tostring(value)
+	end
+end
+local Hotbars = player.PlayerGui:FindFirstChild("BackpackGui"):FindFirstChild("Backpack"):FindFirstChild("Hotbar")
+local Inventory = player.PlayerGui:FindFirstChild("BackpackGui"):FindFirstChild("Backpack"):FindFirstChild("Inventory")
+local Inventory_Player = Inventory:FindFirstChild("ScrollingFrame"):FindFirstChild("UIGridFrame")
+local function ShowSell(Folder)
+local Modules_CalculatePlant = require(replicatedStorage.Modules.CalculatePlantValue)
+for _, Frame in ipairs(Folder:GetChildren()) do
+    if Frame:IsA("TextButton") then
+        if Frame:FindFirstChild("Somtank_Much") then
+            Frame:FindFirstChild("Somtank_Much"):Destroy()
+        end
+    end
+    wait()
+end
+for _, Frame in ipairs(Folder:GetChildren()) do
+    if Frame:IsA("TextButton") then
+        if not Frame:FindFirstChild("Somtank_Much") then
+            print("Isrun")
+            local NewText = Instance.new("TextLabel", Frame)
+            NewText.Name = "Somtank_Much"
+            local UIStroke = Instance.new("UIStroke", NewText)
+            local Tool = nil
+            UIStroke.Thickness = 3
+            UIStroke.Color = Color3.fromRGB(10, 10, 26)
+            if Frame:FindFirstChild("ToolName") then
+                local Tool_Name = Frame:FindFirstChild("ToolName").Text
+                if player.Backpack:FindFirstChild(Tool_Name) then
+                    Tool = player.Backpack:FindFirstChild(Tool_Name)
+                end
+            end
+            if Tool ~= nil then
+                local money = formatMoney(Modules_CalculatePlant(Tool))
+                NewText.BackgroundTransparency = 1
+                NewText.Position = UDim2.new(0,0,0,44)
+                NewText.Size = UDim2.new(0,60,0,15)
+                NewText.TextColor3 = Color3.fromRGB(135, 66, 255)
+                NewText.RichText = true
+                NewText.Text = "ราคา <b><font color='rgb(0,255,0)'>" .. money .. "</font></b>"
+                if Modules_CalculatePlant(Tool) == 0 then
+                    NewText:Destroy()
+                end
+            else
+                NewText:Destroy()
+            end
+            if NewText.Text == "Label" then
+                NewText:Destroy()
+            end
+        end
+    end
+    wait()
+end
+end
+
+task.spawn(function()
+	while true do
+		ShowSell(Hotbars)
+		task.wait(6)
+	end
+end)
+
+task.spawn(function()
+	while true do
+		ShowSell(Inventory_Player)
+		task.wait(11)
+	end
+end)
