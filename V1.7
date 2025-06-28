@@ -807,11 +807,12 @@ task.spawn(function()
 										if FruitsModelv2:IsA("BasePart") and FruitsModelv2:FindFirstChildOfClass("ProximityPrompt") then
 											if AutoFarm == true and AutoSellOn == false then
 												local ProximityPrompt = FruitsModelv2:FindFirstChildOfClass("ProximityPrompt")
-												local tweenToTarget = TweenService:Create(HMNRT, tweenInfo, {CFrame = ProximityPrompt.Parent.CFrame})
-												tweenToTarget:Play()
-												wait(0.2)
-												fireproximityprompt(ProximityPrompt)
+												--local tweenToTarget = TweenService:Create(HMNRT, tweenInfo, {CFrame = ProximityPrompt.Parent.CFrame})
+												--tweenToTarget:Play()
+												HMNRT.CFrame = ProximityPrompt.Parent.CFrame
 												wait(0.1)
+												fireproximityprompt(ProximityPrompt)
+												--wait(0.1)
 											end
 										end
 									end
@@ -838,7 +839,7 @@ local function matchesAllowedKeywordv2(value)
 	end
 	return false
 end
-task.spawn(function()---------    Summer Fruit
+task.spawn(function()---------Summer Fruit
 	local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Linear)
 	while wait(1) do
 		if AutoGetEvenFruit == true then
@@ -856,19 +857,21 @@ task.spawn(function()---------    Summer Fruit
 										if FruitsModelv2:IsA("BasePart") and FruitsModelv2:FindFirstChildOfClass("ProximityPrompt") then
 											if AutoGetEvenFruit == true and AutoSellOn == false then
 												local ProximityPrompt = FruitsModelv2:FindFirstChildOfClass("ProximityPrompt")
-												local tweenToTarget = TweenService:Create(HMNRT, tweenInfo, {CFrame = ProximityPrompt.Parent.CFrame})
-												tweenToTarget:Play()
-												wait(0.2)
+												--local tweenToTarget = TweenService:Create(HMNRT, tweenInfo, {CFrame = ProximityPrompt.Parent.CFrame})
+												--tweenToTarget:Play()
+												HMNRT.CFrame = ProximityPrompt.Parent.CFrame
+												--wait(0.2)
 												fireproximityprompt(ProximityPrompt)
-												wait(0.1)
+												--wait(0.1)
 											end
 										end
 									end
 								end
 							end
 						end
-						local tweenBack = TweenService:Create(HMNRT, tweenInfo, {CFrame = originalCFrame})
-						tweenBack:Play()
+						--local tweenBack = TweenService:Create(HMNRT, tweenInfo, {CFrame = originalCFrame})						
+						--tweenBack:Play()
+						HMNRT.CFrame = originalCFrame
 					end
 				end
 			end
