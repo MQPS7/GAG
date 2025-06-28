@@ -1059,12 +1059,11 @@ for _, Frame in ipairs(Folder:GetChildren()) do
             Frame:FindFirstChild("Somtank_Much"):Destroy()
         end
     end
-    wait()
+    --wait()
 end
 for _, Frame in ipairs(Folder:GetChildren()) do
     if Frame:IsA("TextButton") then
         if not Frame:FindFirstChild("Somtank_Much") then
-            print("Isrun")
             local NewText = Instance.new("TextLabel", Frame)
             NewText.Name = "Somtank_Much"
             local UIStroke = Instance.new("UIStroke", NewText)
@@ -1096,13 +1095,16 @@ for _, Frame in ipairs(Folder:GetChildren()) do
             end
         end
     end
-    wait()
+    --wait()
 end
 end
 
 task.spawn(function()
 	while true do
-		ShowSell(Hotbars)
+		local Old_Value = 0
+		if #Hotbars:GetChildren() ~= Old_Value then
+			ShowSell(Hotbars)
+		end
 		task.wait(6)
 	end
 end)
