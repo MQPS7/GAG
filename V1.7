@@ -56,7 +56,6 @@ local function createSlider(parent, position, size, minValue, maxValue, defaultV
 		value = minValue + (maxValue - minValue) * percent;		line.Size = UDim2.new(percent, 0, 1, 0)
 		lineButton.Position = UDim2.new(percent, -lineButton.AbsoluteSize.X / 2, 0.5, -lineButton.AbsoluteSize.Y / 2)
 		textLabel.Text = "<b> " .. labelText .. " " .. math.floor(value) .. " </b>"
-
 		if labelText == "ความเร็วการเดิน" then
 			WalkSpeedValue = value
 		end		
@@ -470,9 +469,9 @@ ButtonCon27.Activated:Connect(function()
 		AutoBuyBCSprinkler = false
 	end
 end)
-local ButtonCon28 = Instance.new("TextButton") ; local SummerRewards_UI = plrGui:FindFirstChild("SummerRewards_UI")
-SetButtonText(ButtonCon28, UDim2.new(0.06, 0,0.55, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro2, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ของรางวัลอีเว้นท์ ☀️ </b>")
-ButtonCon28.Activated:Connect(function()
+local ButtonCon28_1 = Instance.new("TextButton") ; local SummerRewards_UI = plrGui:FindFirstChild("SummerRewards_UI")
+SetButtonText(ButtonCon28_1, UDim2.new(0.06, 0,0.55, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro2, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ของรางวัลอีเว้นท์ ☀️ </b>")
+ButtonCon28_1.Activated:Connect(function()
 	if SummerRewards_UI then
 		if SummerRewards_UI.Enabled == false then
 		   SummerRewards_UI.Enabled = true
@@ -514,7 +513,50 @@ ButtonCon29.Activated:Connect(function()
 		AutoBuyMasSprinkler = false
 	end
 end)
-
+local ButtonCon30 = Instance.new("TextButton") ; local EventShop_UI = plrGui:FindFirstChild("EventShop_UI")
+SetButtonText(ButtonCon30, UDim2.new(0.06, 0,0.7, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro2, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ร้านค้าฤดูร้อน ☀️ </b>")
+ButtonCon30.Activated:Connect(function()
+	if EventShop_UI then
+		if EventShop_UI.Enabled == false then
+		   EventShop_UI.Enabled = true
+	    else
+		   EventShop_UI.Enabled = false
+	   end
+	end	
+end)
+local ButtonCon31 = Instance.new("TextButton") ; local AutoBuySummerSeed = false
+SetButtonText(ButtonCon31, UDim2.new(0.06, 0,0.55, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro5, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ออโต้ถุงเมล็ดฤดูร้อน 🌱 </b>")
+ButtonCon31.Activated:Connect(function()
+	if AutoBuySummerSeed == false then
+		ButtonCon31.Text = "<b> ออโต้ถุงเมล็ดฤดูร้อน 🟢 </b>"
+		AutoBuySummerSeed = true
+	else
+		ButtonCon31.Text = "<b> ออโต้ถุงเมล็ดฤดูร้อน 🌱 </b>"
+		AutoBuySummerSeed = false
+	end
+end)
+local ButtonCon32 = Instance.new("TextButton") ; local AutoBuySummerEgg = false
+SetButtonText(ButtonCon32, UDim2.new(0.06, 0,0.7, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro5, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ออโต้ซื้อไข่ฤดูร้อน 🥚 </b>")
+ButtonCon32.Activated:Connect(function()
+	if AutoBuySummerEgg == false then
+		ButtonCon32.Text = "<b> ออโต้ซื้อไข่ฤดูร้อน 🟢 </b>"
+		AutoBuySummerEgg = true
+	else
+		ButtonCon32.Text = "<b> ออโต้ซื้อไข่ฤดูร้อน 🥚 </b>"
+		AutoBuySummerEgg = false
+	end
+end)
+local ButtonCon33 = Instance.new("TextButton") ; local AutoBuyHamster = false
+SetButtonText(ButtonCon33, UDim2.new(0.06, 0,0.85, 0), UDim2.new(0.9, 0,0.1, 0), 1, FrameContro5, Color3.new(0.294118, 0.294118, 0.294118) , "<b> ออโต้ซื้อแฮมสเตอร์ 🐹 </b>")
+ButtonCon33.Activated:Connect(function()
+	if AutoBuyHamster == false then
+		ButtonCon33.Text = "<b> ออโต้ซื้อแฮมสเตอร์ 🟢 </b>"
+		AutoBuyHamster = true
+	else
+		ButtonCon33.Text = "<b> ออโต้ซื้อแฮมสเตอร์ 🐹 </b>"
+		AutoBuyHamster = false
+	end
+end)
 
 local WalkSpeedslider = createSlider(FrameContro1, UDim2.new(0.06, 0, 0.3, 0), UDim2.new(0.85, 0, 0.05, 0), 0, 200, 16, "ความเร็วการเดิน")
 
@@ -831,6 +873,7 @@ end)
 local EventFruitsAllowed = {"Cauliflower" ,"Watermalon", "Green Apple", "Avocado", "Banana", "Pineapple"
 	, "Kiwi", "Bell Pepper", "Prickly Pear", "Loquat", "Feijoa"
 }
+
 local function matchesAllowedKeywordv2(value)
 	for _, keyword in ipairs(EventFruitsAllowed) do
 		if keyword == value then
@@ -861,6 +904,7 @@ task.spawn(function()---------Summer Fruit
 												--tweenToTarget:Play()
 												HMNRT.CFrame = ProximityPrompt.Parent.CFrame
 												--wait(0.2)
+												wait()
 												fireproximityprompt(ProximityPrompt)
 												--wait(0.1)
 											end
@@ -973,6 +1017,16 @@ task.spawn(function()
     local Advanced_Sprinkler_Args = {"Advanced Sprinkler"}
     local Godly_Sprinkler_Args = {"Godly Sprinkler"}
     local Master_Sprinkler_Args = {"Master Sprinkler"}
+
+	local BuyEventShopStock = game:GetService("ReplicatedStorage"):FindFirstChild("GameEvents"):FindFirstChild("BuyEventShopStock")
+
+    local Summer_Seed_Pack_args = {"Summer Seed Pack"}
+    local Oasis_Crate_args = {"Oasis Crate"}
+    local Oasis_Egg_args = {"Oasis Egg"}
+    local Hamster_args1 = {"Hamster"}
+    local Hamster_args2 = {"Hamster Pet"}
+	local Hamster_args3 = {"Hamster Pets"}
+	local Hamster_args4 = {"Hamster Egg"}
 	while true do
 		if AutoBuyBCSprinkler == true then
 			for i = 1 , 10 do
@@ -995,6 +1049,28 @@ task.spawn(function()
 		if AutoBuyMasSprinkler == true then
 			for i = 1 , 10 do
 				BuyGearStock:FireServer(unpack(Master_Sprinkler_Args))
+				wait(0.25)
+			end
+		end
+
+		if AutoBuySummerEgg == true then----Event
+			for i = 1 , 10 do
+				BuyEventShopStock:FireServer(unpack(Oasis_Egg_args))
+				wait(0.25)
+			end
+		end
+		if AutoBuySummerSeed == true then
+			for i = 1 , 10 do
+				BuyEventShopStock:FireServer(unpack(Summer_Seed_Pack_args))
+				wait(0.25)
+			end
+		end
+		if AutoBuyHamster == true then
+			for i = 1 , 10 do
+				BuyEventShopStock:FireServer(unpack(Hamster_args1))
+				BuyEventShopStock:FireServer(unpack(Hamster_args2))
+				BuyEventShopStock:FireServer(unpack(Hamster_args3))
+				BuyEventShopStock:FireServer(unpack(Hamster_args4))
 				wait(0.25)
 			end
 		end
@@ -1070,14 +1146,20 @@ end
 
 task.spawn(function()
 	while true do
-		ShowSell(Hotbars)
+		if ScreenGui then
+			ShowSell(Hotbars)
+		end	
 		task.wait(4)
 	end
 end)
 
 task.spawn(function()
 	while true do
-		ShowSell(Inventory_Player)
+		if ScreenGui then
+			ShowSell(Inventory_Player)
+		end
 		task.wait(10)
 	end
 end)
+
+
