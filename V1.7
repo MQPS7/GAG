@@ -585,8 +585,8 @@ local Fruits = {
 }
 
 local EventFruits = {
-	Event = {"Cauliflower" ,"Watermalon", "Green Apple", "Avocado", "Banana", "Pineapple"
-	, "Kiwi", "Bell Pepper", "Prickly Pear", "Loquat", "Feijoa"}
+	Event = {"Cauliflower" ,"Watermalon", "Rafflesia", "Green Apple", "Avocado", "Banana", "Pineapple"
+	, "Kiwi", "Bell Pepper", "Prickly Pear", "Loquat", "Feijoa", "Pitcher Plant", "Pitcher"}
 }
 
 local BuySeedStock = game:GetService("ReplicatedStorage"):FindFirstChild("GameEvents"):FindFirstChild("BuySeedStock")
@@ -906,7 +906,9 @@ task.spawn(function()
 			end
 			local SubmitHeldPlant = {"SubmitHeldPlant"}
 			for i = 1 , 3 do
-				SummerHarvestRemoteEvent:FireServer(unpack(SubmitHeldPlant))
+				if character:FindFirstChildOfClass("Tool") then
+					SummerHarvestRemoteEvent:FireServer(unpack(SubmitHeldPlant))
+				end				
 			end			
             
 		end
@@ -961,42 +963,6 @@ task.spawn(function()
 	end
 end)
 
-task.spawn(function()
-	local Backpack = player.Backpack
-    local MachineInteractargs = {"MachineInteract"}
-    local HoneyMachineService_RE = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("HoneyMachineService_RE")
-	while wait(0.1) do
-		local OldCFrameHMNRT = HMNRT.CFrame
-		local FoundPoliFruit = false
-		if CanTakeFruitToBee == true then
-			for _, Fruist in ipairs(Backpack:GetChildren()) do
-				if Fruist:IsA("Tool") then
-					for _, part in ipairs(Fruist:GetChildren()) do
-						if part:IsA("BasePart") and part:FindFirstChild("COLOR") and CanTakeFruitToBee == true then
-							if not character:FindFirstChildOfClass("Tool") then
-								Fruist.Parent = character
-							    FoundPoliFruit = true
-							end
-						end
-					end
-				end
-				if FoundPoliFruit == true then
-					HMNRT.CFrame = CFrame.new(-109.559044, 4.03001356, -12.8144922, 0.255481929, 0, 0.966813803, 0, 1, 0, -0.966813803, 0, 0.255481929)
-					wait(0.05)
-					HoneyMachineService_RE:FireServer(unpack(MachineInteractargs))
-					FoundPoliFruit = false
-					wait(0.05)
-				    HMNRT.CFrame = OldCFrameHMNRT					
-					for _, partCH in ipairs(character:GetChildren()) do
-						if partCH:IsA("Tool") then
-							partCH.Parent = Backpack
-						end
-					end
-                end
-			end
-		end
-	end
-end)
 
 task.spawn(function()
 	local BuyGearStock = game:GetService("ReplicatedStorage"):FindFirstChild("GameEvents"):FindFirstChild("BuyGearStock")
@@ -1101,10 +1067,7 @@ end
 
 task.spawn(function()
 	while true do
-		local Old_Value = 0
-		if #Hotbars:GetChildren() ~= Old_Value then
-			ShowSell(Hotbars)
-		end
+		ShowSell(Hotbars)
 		task.wait(4)
 	end
 end)
