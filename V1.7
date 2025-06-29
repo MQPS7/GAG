@@ -11,8 +11,8 @@ local Camera = workspace.CurrentCamera
 local Teleport_Gear = player.PlayerGui:FindFirstChild("Teleport_UI"):FindFirstChild("Frame"):FindFirstChild("Gear")
 local Teleport_Pets = player.PlayerGui:FindFirstChild("Teleport_UI"):FindFirstChild("Frame"):FindFirstChild("Pets")
 if Teleport_Gear and Teleport_Pets then
-    Teleport_Gear.Visible = true
-    Teleport_Pets.Visible = true
+	Teleport_Gear.Visible = true
+	Teleport_Pets.Visible = true
 end
 
 local AutoBuySeedCommon = false; local AutoBuySeedUncommon = false
@@ -474,10 +474,10 @@ SetButtonText(ButtonCon28_1, UDim2.new(0.06, 0,0.55, 0), UDim2.new(0.9, 0,0.1, 0
 ButtonCon28_1.Activated:Connect(function()
 	if SummerRewards_UI then
 		if SummerRewards_UI.Enabled == false then
-		   SummerRewards_UI.Enabled = true
-	    else
-		   SummerRewards_UI.Enabled = false
-	   end
+			SummerRewards_UI.Enabled = true
+		else
+			SummerRewards_UI.Enabled = false
+		end
 	end	
 end)
 local ButtonCon28 = Instance.new("TextButton") ; local AutoBuyAdSprinkler = false
@@ -518,10 +518,10 @@ SetButtonText(ButtonCon30, UDim2.new(0.06, 0,0.7, 0), UDim2.new(0.9, 0,0.1, 0), 
 ButtonCon30.Activated:Connect(function()
 	if EventShop_UI then
 		if EventShop_UI.Enabled == false then
-		   EventShop_UI.Enabled = true
-	    else
-		   EventShop_UI.Enabled = false
-	   end
+			EventShop_UI.Enabled = true
+		else
+			EventShop_UI.Enabled = false
+		end
 	end	
 end)
 local ButtonCon31 = Instance.new("TextButton") ; local AutoBuySummerSeed = false
@@ -628,7 +628,7 @@ local Fruits = {
 
 local EventFruits = {
 	Event = {"Cauliflower" ,"Watermalon", "Rafflesia", "Green Apple", "Avocado", "Banana", "Pineapple"
-	, "Kiwi", "Bell Pepper", "Prickly Pear", "Loquat", "Feijoa", "Pitcher Plant", "Pitcher"}
+		, "Kiwi", "Bell Pepper", "Prickly Pear", "Loquat", "Feijoa", "Pitcher Plant", "Pitcher"}
 }
 
 local BuySeedStock = game:GetService("ReplicatedStorage"):FindFirstChild("GameEvents"):FindFirstChild("BuySeedStock")
@@ -636,34 +636,34 @@ local BuySeedStock = game:GetService("ReplicatedStorage"):FindFirstChild("GameEv
 local function TryBuySeeds(rarityName, isEnabled)
 	if isEnabled then
 		for _, seedName in ipairs(Fruits[rarityName]) do
-            BuySeedStock:FireServer(seedName)
+			BuySeedStock:FireServer(seedName)
 		end
 	end
 end
 task.spawn(function()
 	while true do
-        TryBuySeeds("Common", AutoBuySeedCommon)
-        TryBuySeeds("Uncommon", AutoBuySeedUncommon)
-        TryBuySeeds("Rare", AutoBuySeedRare)
-        TryBuySeeds("Legendary", AutoBuySeedLegendary)
-        TryBuySeeds("Mythical", AutoBuySeedMythical)
-        TryBuySeeds("Divine", AutoBuySeedDivine)
-        wait(0.01)
-    end
+		TryBuySeeds("Common", AutoBuySeedCommon)
+		TryBuySeeds("Uncommon", AutoBuySeedUncommon)
+		TryBuySeeds("Rare", AutoBuySeedRare)
+		TryBuySeeds("Legendary", AutoBuySeedLegendary)
+		TryBuySeeds("Mythical", AutoBuySeedMythical)
+		TryBuySeeds("Divine", AutoBuySeedDivine)
+		wait(0.01)
+	end
 end)
 
 local function TryBuySeedsEvent(rarityName, isEnabled)
 	if isEnabled then
 		for _, seedName in ipairs(EventFruits[rarityName]) do
-            BuySeedStock:FireServer(seedName)
+			BuySeedStock:FireServer(seedName)
 		end
 	end
 end
 task.spawn(function()
 	while true do
-        TryBuySeedsEvent("Event", AutoBuyEventSeedPack)
-        wait(0.01)
-    end
+		TryBuySeedsEvent("Event", AutoBuyEventSeedPack)
+		wait(0.01)
+	end
 end)
 
 task.spawn(function()
@@ -828,8 +828,23 @@ task.spawn(function()
 	end
 end)
 
+local function ScanFruit(Folder)
+	for _, FruitsModel in ipairs(Folder:GetChildren()) do
+		for _, FruitsModelv2 in ipairs(FruitsModel:GetChildren()) do
+			if FruitsModelv2:IsA("BasePart") and FruitsModelv2:FindFirstChildOfClass("ProximityPrompt") then
+				if AutoFarm == true and AutoSellOn == false then
+					local ProximityPrompt = FruitsModelv2:FindFirstChildOfClass("ProximityPrompt")
+					HMNRT.CFrame = ProximityPrompt.Parent.CFrame
+					wait(0.05)
+					fireproximityprompt(ProximityPrompt)
+					wait(0.05)
+				end
+			end
+		end
+	end
+end
+
 task.spawn(function()
-	local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Linear)
 	while wait(1) do
 		if AutoFarm == true then
 			if PlayerFarm then
@@ -839,30 +854,16 @@ task.spawn(function()
 					local Plants_Physical = Important:FindFirstChild("Plants_Physical")
 					if Plants_Physical then
 						for _, PlantModel in ipairs(Plants_Physical:GetChildren()) do
-							if PlantModel:IsA("Model") and PlantModel:FindFirstChild("Fruits") then
-								local Fruits = PlantModel:FindFirstChild("Fruits")
-								if not PlantModel:FindFirstChild("Fruits") then
-									Fruits = PlantModel
-								end
-								for _, FruitsModel in ipairs(Fruits:GetChildren()) do
-									for _, FruitsModelv2 in ipairs(FruitsModel:GetChildren()) do
-										if FruitsModelv2:IsA("BasePart") and FruitsModelv2:FindFirstChildOfClass("ProximityPrompt") then
-											if AutoFarm == true and AutoSellOn == false then
-												local ProximityPrompt = FruitsModelv2:FindFirstChildOfClass("ProximityPrompt")
-												--local tweenToTarget = TweenService:Create(HMNRT, tweenInfo, {CFrame = ProximityPrompt.Parent.CFrame})
-												--tweenToTarget:Play()
-												HMNRT.CFrame = ProximityPrompt.Parent.CFrame
-												wait(0.1)
-												fireproximityprompt(ProximityPrompt)
-												--wait(0.1)
-											end
-										end
-									end
+							if PlantModel:IsA("Model") then
+								if PlantModel:FindFirstChild("Fruits") then
+									local Fruits = PlantModel:FindFirstChild("Fruits")
+									ScanFruit(Fruits)
+								else
+									ScanFruit(PlantModel)
 								end
 							end
 						end
-						local tweenBack = TweenService:Create(HMNRT, tweenInfo, {CFrame = originalCFrame})
-						tweenBack:Play()
+						HMNRT.CFrame = originalCFrame
 					end
 				end
 			end
@@ -893,28 +894,15 @@ task.spawn(function()---------Summer Fruit
 					local Plants_Physical = Important:FindFirstChild("Plants_Physical")
 					if Plants_Physical then
 						for _, PlantModel in ipairs(Plants_Physical:GetChildren()) do
-							if PlantModel:IsA("Model") and PlantModel:FindFirstChild("Fruits") and matchesAllowedKeywordv2(PlantModel.Name) then                                
-								local Fruits = PlantModel:FindFirstChild("Fruits")
-								for _, FruitsModel in ipairs(Fruits:GetChildren()) do
-									for _, FruitsModelv2 in ipairs(FruitsModel:GetChildren()) do
-										if FruitsModelv2:IsA("BasePart") and FruitsModelv2:FindFirstChildOfClass("ProximityPrompt") then
-											if AutoGetEvenFruit == true and AutoSellOn == false then
-												local ProximityPrompt = FruitsModelv2:FindFirstChildOfClass("ProximityPrompt")
-												--local tweenToTarget = TweenService:Create(HMNRT, tweenInfo, {CFrame = ProximityPrompt.Parent.CFrame})
-												--tweenToTarget:Play()
-												HMNRT.CFrame = ProximityPrompt.Parent.CFrame
-												--wait(0.2)
-												wait()
-												fireproximityprompt(ProximityPrompt)
-												--wait(0.1)
-											end
-										end
-									end
+							if PlantModel:IsA("Model") and matchesAllowedKeywordv2(PlantModel.Name) then                                
+								if PlantModel:FindFirstChild("Fruits") then
+									local Fruits = PlantModel:FindFirstChild("Fruits")
+									ScanFruit(Fruits)
+								else
+									ScanFruit(PlantModel)
 								end
 							end
 						end
-						--local tweenBack = TweenService:Create(HMNRT, tweenInfo, {CFrame = originalCFrame})						
-						--tweenBack:Play()
 						HMNRT.CFrame = originalCFrame
 					end
 				end
@@ -940,10 +928,10 @@ task.spawn(function()
 			local Hold = 0
 			if character:FindFirstChildOfClass("Tool") then
 				for _, ItemB in ipairs(character:GetChildren()) do
-				    if ItemB:IsA("Tool") then
-				    	ItemB.Parent = player.Backpack
-				    end
-			    end
+					if ItemB:IsA("Tool") then
+						ItemB.Parent = player.Backpack
+					end
+				end
 			end
 			for _, Item in ipairs(player.Backpack:GetChildren()) do
 				if Item:IsA("Tool") and FindNameEventSummer(Item.Name) and Hold < 3 then
@@ -957,7 +945,7 @@ task.spawn(function()
 					SummerHarvestRemoteEvent:FireServer(unpack(SubmitHeldPlant))
 				end				
 			end			
-            
+
 		end
 	end
 end)
@@ -1013,18 +1001,18 @@ end)
 
 task.spawn(function()
 	local BuyGearStock = game:GetService("ReplicatedStorage"):FindFirstChild("GameEvents"):FindFirstChild("BuyGearStock")
-    local Basic_Sprinkler_Args = {"Basic Sprinkler"}
-    local Advanced_Sprinkler_Args = {"Advanced Sprinkler"}
-    local Godly_Sprinkler_Args = {"Godly Sprinkler"}
-    local Master_Sprinkler_Args = {"Master Sprinkler"}
+	local Basic_Sprinkler_Args = {"Basic Sprinkler"}
+	local Advanced_Sprinkler_Args = {"Advanced Sprinkler"}
+	local Godly_Sprinkler_Args = {"Godly Sprinkler"}
+	local Master_Sprinkler_Args = {"Master Sprinkler"}
 
 	local BuyEventShopStock = game:GetService("ReplicatedStorage"):FindFirstChild("GameEvents"):FindFirstChild("BuyEventShopStock")
 
-    local Summer_Seed_Pack_args = {"Summer Seed Pack"}
-    local Oasis_Crate_args = {"Oasis Crate"}
-    local Oasis_Egg_args = {"Oasis Egg"}
-    local Hamster_args1 = {"Hamster"}
-    local Hamster_args2 = {"Hamster Pet"}
+	local Summer_Seed_Pack_args = {"Summer Seed Pack"}
+	local Oasis_Crate_args = {"Oasis Crate"}
+	local Oasis_Egg_args = {"Oasis Egg"}
+	local Hamster_args1 = {"Hamster"}
+	local Hamster_args2 = {"Hamster Pet"}
 	local Hamster_args3 = {"Hamster Pets"}
 	local Hamster_args4 = {"Hamster Egg"}
 	while true do
@@ -1097,51 +1085,51 @@ local Hotbars = player.PlayerGui:FindFirstChild("BackpackGui"):FindFirstChild("B
 local Inventory = player.PlayerGui:FindFirstChild("BackpackGui"):FindFirstChild("Backpack"):FindFirstChild("Inventory")
 local Inventory_Player = Inventory:FindFirstChild("ScrollingFrame"):FindFirstChild("UIGridFrame")
 local function ShowSell(Folder)
-local Modules_CalculatePlant = require(replicatedStorage.Modules.CalculatePlantValue)
-for _, Frame in ipairs(Folder:GetChildren()) do
-    if Frame:IsA("TextButton") then
-        if Frame:FindFirstChild("Somtank_Much") then
-            Frame:FindFirstChild("Somtank_Much"):Destroy()
-        end
-    end
-    --wait()
-end
-for _, Frame in ipairs(Folder:GetChildren()) do
-    if Frame:IsA("TextButton") then
-        if not Frame:FindFirstChild("Somtank_Much") then
-            local NewText = Instance.new("TextLabel", Frame)
-            NewText.Name = "Somtank_Much"
-            local UIStroke = Instance.new("UIStroke", NewText)
-            local Tool = nil
-            UIStroke.Thickness = 3
-            UIStroke.Color = Color3.fromRGB(10, 10, 26)
-            if Frame:FindFirstChild("ToolName") then
-                local Tool_Name = Frame:FindFirstChild("ToolName").Text
-                if player.Backpack:FindFirstChild(Tool_Name) then
-                    Tool = player.Backpack:FindFirstChild(Tool_Name)
-                end
-            end
-            if Tool ~= nil then
-                local money = formatMoney(Modules_CalculatePlant(Tool))
-                NewText.BackgroundTransparency = 1
-                NewText.Position = UDim2.new(0,0,0,44)
-                NewText.Size = UDim2.new(0,60,0,15)
-                NewText.TextColor3 = Color3.fromRGB(135, 66, 255)
-                NewText.RichText = true
-                NewText.Text = "ราคา <b><font color='rgb(0,255,0)'>" .. money .. "</font></b>"
-                if Modules_CalculatePlant(Tool) == 0 then
-                    NewText:Destroy()
-                end
-            else
-                NewText:Destroy()
-            end
-            if NewText.Text == "Label" then
-                NewText:Destroy()
-            end
-        end
-    end
-    --wait()
-end
+	local Modules_CalculatePlant = require(replicatedStorage.Modules.CalculatePlantValue)
+	for _, Frame in ipairs(Folder:GetChildren()) do
+		if Frame:IsA("TextButton") then
+			if Frame:FindFirstChild("Somtank_Much") then
+				Frame:FindFirstChild("Somtank_Much"):Destroy()
+			end
+		end
+		--wait()
+	end
+	for _, Frame in ipairs(Folder:GetChildren()) do
+		if Frame:IsA("TextButton") then
+			if not Frame:FindFirstChild("Somtank_Much") then
+				local NewText = Instance.new("TextLabel", Frame)
+				NewText.Name = "Somtank_Much"
+				local UIStroke = Instance.new("UIStroke", NewText)
+				local Tool = nil
+				UIStroke.Thickness = 3
+				UIStroke.Color = Color3.fromRGB(10, 10, 26)
+				if Frame:FindFirstChild("ToolName") then
+					local Tool_Name = Frame:FindFirstChild("ToolName").Text
+					if player.Backpack:FindFirstChild(Tool_Name) then
+						Tool = player.Backpack:FindFirstChild(Tool_Name)
+					end
+				end
+				if Tool ~= nil then
+					local money = formatMoney(Modules_CalculatePlant(Tool))
+					NewText.BackgroundTransparency = 1
+					NewText.Position = UDim2.new(0,0,0,44)
+					NewText.Size = UDim2.new(0,60,0,15)
+					NewText.TextColor3 = Color3.fromRGB(135, 66, 255)
+					NewText.RichText = true
+					NewText.Text = "ราคา <b><font color='rgb(0,255,0)'>" .. money .. "</font></b>"
+					if Modules_CalculatePlant(Tool) == 0 then
+						NewText:Destroy()
+					end
+				else
+					NewText:Destroy()
+				end
+				if NewText.Text == "Label" then
+					NewText:Destroy()
+				end
+			end
+		end
+		--wait()
+	end
 end
 
 task.spawn(function()
@@ -1149,7 +1137,7 @@ task.spawn(function()
 		if ScreenGui then
 			ShowSell(Hotbars)
 		end	
-		task.wait(4)
+		wait(3)
 	end
 end)
 
@@ -1158,8 +1146,7 @@ task.spawn(function()
 		if ScreenGui then
 			ShowSell(Inventory_Player)
 		end
-		task.wait(10)
+		wait(10)
 	end
 end)
-
 
